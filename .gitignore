@@ -6,7 +6,6 @@ tests/tmp
 BUILD
 mods
 tmpsrc
-overview.html
 guides/guide/*.aux
 guides/guide/*.pdf
 guides/guide/*.log
