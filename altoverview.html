@@ -1,0 +1,298 @@
+<HTML>
+<BODY>
+Class library for animations of bicycles, cars, and pedestrians.
+Please see
+<A HREF="factories-api/index.html" target="_top">the factory documentation</A>
+for documentation on configuring factories and
+"<A HREF="../guide.pdf" target="_blank">Roadanim Scripting Guide</A>" for
+a manual.
+<!-- need to end and replace two div elements to get font size back -->
+</div>
+</div>
+<div>
+<div class="block">
+<P>
+While the package
+<code><a href="../../../bzdev/doc/api/org/bzdev/anim2d/package-summary.html" target="_self">org.bzdev.anim2d</a></code>
+contains a class
+<code><a href="../../../bzdev/doc/api/org/bzdev/anim2d/AnimationLayer2D.html" target="_self">org.bzdev.anim2d.AnimationLayer2D</a></code>
+and a corresponding factory
+<code><a href="../../../bzdev/doc/api/org/bzdev/anim2d/AnimationLayer2DFactory.html" target="_self">AnimationLayer2DFactory</a></code>
+for creating geometric figures that can provide the background for an
+animation, and a class
+<code><a href="../../../bzdev/doc/api/org/bzdev/anim2d/AnimationPath2D.html" target="_self">AnimationPath2D</a></code>
+and a corresponding factory
+<code><a href="../../../bzdev/doc/api/org/bzdev/anim2d/AnimationPath2DFactory.html" target="_self">AnimationPath2DFactory</a></code>
+for defining paths that objects may follow, it does not provide
+implementations of any moveable objects that appear in an animation.
+The current library consists of a package,
+<code><a href="org/bzdev/roadanim/package-summary.html" target="_self">org.bzdev.roadanim</a></code>,
+that contains three subclasses of
+<code><a href="../../../bzdev/doc/api/org/bzdev/anim2d/DirectedObject2D.html" target="_self">org.bzdev.anim2d.DirectedObject2D</a></code>:
+<UL>
+  <LI> <code><a href = "org/bzdev/roadanim/Bicycle.html" target="_self">Bicycle</a></code>
+        - the class representing a bicycle.
+  <LI> <code><a href = "org/bzdev/roadanim/Car.html" target="_self">Car</a></code>
+        - the class representing a car.
+  <LI> <code><a href = "org/bzdev/roadanim/Pedestrian.html" target="_self">Pedestrian</a></code>
+         - the class representing a pedestrian.
+</UL>
+
+The corresponding abstract factories (which are subclasses of the factory
+<code><A HREF="../../../bzdev/doc/api/org/bzdev/anim2d/DirectedObjectFactory.html" target="_self">
+  org.bzdev.anim2d.DirectedObjectFactory</A></code>) are
+<UL>
+  <LI> <code><a href = "org/bzdev/roadanim/AbstractBicycleFactory.html" target="_self">AbstractBicycleFactory</a></code>
+       - the class that defines the parameters used to configure
+        instances of
+        <code><a href = "org/bzdev/roadanim/Bicycle.html" target="_self">Bicycle</a></code>.
+  <LI> <code><a href = "org/bzdev/roadanim/AbstractCarFactory.html" target="_self">AbstractCarFactory</a></code>
+       - the class that defines the parameters used to configure
+       instances of
+       <code><a href = "org/bzdev/roadanim/Car.html" target="_self">Car</a></code>.
+  <LI> <code><a href = "org/bzdev/roadanim/AbstractPedFactory.html" target="_self">AbstractPedFactory</a></code>
+       - the class that defines the parameters used to configure
+       instances of
+       <code><a href = "org/bzdev/roadanim/Pedestrian.html" target="_self">Pedestrian</a></code>.
+</UL>
+These abstract factories are provided for users who would like to
+create subclasses of
+<code><a href = "org/bzdev/roadanim/Bicycle.html" target="_self">Bicycle</a></code>,
+<code><a href = "org/bzdev/roadanim/Car.html" target="_self">Car</a></code>,
+or
+<code><a href = "org/bzdev/roadanim/Pedestrian.html" target="_self">Pedestrian</a></code>.
+<P>
+The non-abstract factories in the
+<code><a href = "org/bzdev/roadanim/package-summary.html" target="_self">org.bzdev.roadanim</a></code>
+package are
+<UL>
+  <LI> <code><a href = "org/bzdev/roadanim/BicycleFactory.html" target="_self">BicycleFactory</a></code>
+       - the class for factories that create
+    instances of <code><a href = "org/bzdev/roadanim/Bicycle.html" target="_self">Bicycle</a></code>.
+  <LI> <code><a href = "org/bzdev/roadanim/CarFactory.html" target="_self">CarFactory</a></code>
+       -  the class for factories that create instances of
+       <code><a href = "org/bzdev/roadanim/Car.html" target="_self">Car</a></code>.
+  <LI> <code><a href = "org/bzdev/roadanim/PedestrianFactory.html" target="_self">PedestrianFactory</a></code>
+       -  the class for factories that create instances of
+       <code><a href = "org/bzdev/roadanim/Pedestrian.html" target="_self">Pedestrian</a></code>.
+</UL>
+The non-abstract factories in the
+<code><a href = "../../../bzdev/doc/api/org/bzdev/anim2d/package-summary.html" target="_self">org.bzdev.anim2d</a></code>
+package are:
+<UL>
+   <LI> <code><a href = "../../../bzdev/doc/api/org/bzdev/anim2d/AnimationLayer2D.html" target="_self">AnimationLayer2DFactory</a></code>
+        - the class for the factories that create layers of objects
+        that will be displayed.  These are in general unmovable
+        objects intended for backgrounds or (in some cases)
+        foregrounds.
+   <LI> <code><a href = "../../../bzdev/doc/api/org/bzdev/anim2d/AnimationPath2DFactory.html" target="_self">AnimationPath2DFactory</a></code>
+        - the class for factories that create paths that subclasses of
+        <code><a href = "../../../bzdev/doc/api/org/bzdev/anim2d/DirectedObject2D.html" target="_self">DirectedObject2D</a></code>
+        will follow.
+   <LI> <code><a href = "../../../bzdev/doc/api/org/bzdev/anim2d/GraphViewFactory.html" target="_self">GraphViewFactory</a></code>
+        - the class for factories that create a view that shows a
+        portion of a two-dimensional space and that can be zoomed to
+        provide various magnifications and that can be moved,
+        following a path.
+</UL>
+<P>
+To use the library, the jar file librdanim.jar (which should be
+installed in the same directory as libbzdev.jar) should be added to
+the path.
+<UL>
+   <LI> If the scrunner command is used, the option
+     <code>--codebase .../librdanim.jar</code> will add the library to the
+     path when the librdanim.jar file is installed in the same directory
+     as the libbzdev.jar file.  This is the most convenient way of creating
+     an animation using a scripting language.
+   <LI>If Java is used directly, use the option
+     <code>-classpath /usr/share/java/librdanim.jar:/usr/share/java/libbzdev.jar</code>
+</UL>
+
+If a scripting language (ECMAScript in the following example),
+A typical animation using the org.bzdev.roadanim package will
+first import packages, test that a directory accessor was defined,
+create an animation (a2d in the example), set the scale factor
+between graph coordinate space and user space, and finally set the
+portion of graph coordinate space initially shown in the animation's
+frame.
+<P>
+<BLOCKQUOTE>
+<CODE>
+<PRE>
+importPackage(org.bzdev.anim2d);
+importPackage(org.bzdev.roadanim);
+importClass(org.bzdev.util.units.MKS);
+
+if (typeof(tmpdir) == undefined) {
+    err.println("tmpdir undefined (need scrunner "
+                + "-d:tmpdir:TMP option)");
+    exit(1);
+}
+
+a2d = scripting.create(Animation2D, scripting,
+		       1920, 1080, 10000.0, 400);
+scaleFactor = 1080.0/MKS.feet(60.0);
+a2d.setRanges(0.0, 0.0, 0.0, 0.5, scaleFactor, scaleFactor);
+</PRE>
+</CODE>
+</BLOCKQUOTE>
+<P>
+Next several fractories will be created:
+<P>
+<BLOCKQUOTE>
+<CODE>
+<PRE>
+gvf = a2d.createFactory(GraphViewFactory);
+cf = a2d.createFactory(CarFactory);
+bf = a2d.createFactory(BicycleFactory);
+pedf = a2d.createFactory(PedestrianFactory);
+pathf = a2d.createFactory(AnimationPath2DFactory);
+alf = a2d.createFactory(AnimationLayer2DFactory);
+</PRE>
+</CODE>
+</BLOCKQUOTE>
+<P>
+It will often be convenient to define constants representing
+standard configurations:
+<P>
+<BLOCKQUOTE>
+<CODE>
+<PRE>
+YELLOW = {red: 255, green: 255, blue: 0};
+...
+BLACK = {red: 0, green: 0, blue: 0};
+WHITE = {red: 255, green: 255, blue: 255};
+
+SQUARE6 = {gcsMode: true, cap: "SQUARE",
+           width: MKS.inches(6.0)};
+
+pathConfig = [
+    {withPrefix: "color", config: BLUE},
+    {withPrefix: "stroke",
+     config: {width: 2.0, gcsMode: false}}];
+</PRE>
+</CODE>
+</BLOCKQUOTE>
+<P>
+Next, one might create a path that a view of graph
+coordinate space will follow, and then create the
+view, giving its initial configuration and a timeline
+showing how the view moves along its path as a function
+of time:
+<P>
+<BLOCKQUOTE>
+<CODE>
+<PRE>
+vpath = pathf.createObject("vpath", [
+    {zorder: 10, visible: false},
+    pathConfig,
+    {withPrefix: "cpoint", withIndex: [
+	{"type": "MOVE_TO", "x": 1.0, "y": 0.0},
+	{"type": "SEG_END", "x": 70.0, "y": 0.0}]}]);
+
+gv = gvf.createObject("view", [
+    {initialX: 1.0, initialY: 0.0},
+    {xFrameFraction: 0.0, yFrameFraction: 0.5},
+    {scaleX: scaleFactor, scaleY: scaleFactor},
+    {withPrefix: "timeline", withIndex: [
+	{time: 0.0, path: vpath, u0: 0.0, velocity: 0,
+	 acceleration: MKS.mphPerSec(5)},
+	{time: 3.0, acceleration: 0.0},
+	{time: 7.7, acceleration: -MKS.mphPerSec(7.5)},
+	{time: 9.7, velocity: 0, acceleration: 0}]}]);
+</PRE>
+</CODE>
+</BLOCKQUOTE>
+<P>
+Next one or more paths will be defined for objects to follow:
+<P>
+<BLOCKQUOTE>
+<CODE>
+<PRE>
+cpath1 = pathf.createObject("cpath1", [
+    {zorder: 10, visible: false},
+    pathConfig,
+    {withPrefix: "cpoint", withIndex: [
+	 {type: "MOVE_TO", x: 0.0, y: -MKS.feet(2)},
+	 {type: "SEG_END", x: 120,  y: -MKS.feet(2)}]}]);
+
+</PRE>
+</CODE>
+</BLOCKQUOTE>
+<P>
+Some numerical constants are useful as well.  The following defines
+<UL>
+  <LI> <code>s1</code> to be 10 meters.
+  <LI> <code>t1</code> to be the time to traverse a distance s1 at
+    a speed of 15 mph.
+  <LI> <code>t1end</code> to be the time after t1 for an object to
+    cover a distance of 120 meters at a speed of 30 mph.
+</UL>
+The computation makes use of the <CODE>KinematicOps2D</CODE> class,
+which computes quantities given parameters representing combinations
+of time, distance, velocity, and acceleration:
+<P>
+<BLOCKQUOTE>
+<CODE>
+<PRE>
+s1 = 10.0;
+t1 = KinematicOps2D.timeGivenDVA(s1, MKS.mph(15.0), 0.0);
+t1end = t1 + KinematicOps2D.timeGivenDVA(120, MKS.mph(30.0), 0.0);
+</PRE>
+</CODE>
+</BLOCKQUOTE>
+<P>
+The following creates an object (in this case, a car), sets its
+stacking order (Z-order) and visibility, and indicates that the
+reference point on the object where it "attaches" to a path it will
+follow is the upper right corner. For a car, this the location of
+the right front bumper. It then provides a timeline entry indicating
+when the car should start following a path and at what velocity tangent
+to the path:
+<P>
+<BLOCKQUOTE>
+<CODE>
+<PRE>
+car1 = cf.createObject("car1", [
+    {zorder: 2, visible: true},
+    {refPointMode: "BY_NAME", refPointName: "UPPER_RIGHT"},
+    {initialX: 0.0, initialY: -MKS.feet(2), initialAngle: 0.0},
+    {withPrefix: "timeline", withIndex: [
+	 {time: t1, path: cpath1, u0: 0.0,
+	  velocity: MKS.mph(30)}]}]);
+</PRE>
+</CODE>
+</BLOCKQUOTE>
+<P>
+Of course, a number of objects will be created in a full animation.
+<P>
+Finally, the number of frames needed for a 33 second video is
+computed, and a format for the names of the files used to store the
+frames is generated using the <code>initFrames</code> method.  The
+frames will appear in a directory specified by <code>tmpdir</code> and
+will have a file name starting with "col-" and ending with an
+extension appropriate for a PNG image. The file names will be numbered
+sequentally, padded with enough leading zeros that all file names will
+have the same length. Once this format is set up, the method
+<code>scheduleFrames</code> will schedule a specific number of frames
+starting at a specified simulation time provided in units of seconds.
+Finally, the animation is run (generating files rather than displaying
+itself in a window):
+<BLOCKQUOTE>
+<CODE>
+<PRE>
+maxFrames = a2d.estimateFrameCount(33.0);
+a2d.initFrames(maxFrames, "col-", "png", tmpdir);
+a2d.scheduleFrames(0.0, maxFrames);
+
+a2d.run();
+</PRE>
+</CODE>
+</BLOCKQUOTE>
+<P>
+At this point, a video editor or a program such as <CODE>avconv</CODE>
+can be used to turn the sequence of frames into a video that uses one
+of the standard formats.
+</BODY>
+</HTML>
