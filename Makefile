@@ -21,18 +21,14 @@ TMPSRC = $(JROOT)/tmpsrc/
 #
 # System directories (that contains JAR files, etc.)
 #
-SYS_LIBJARDIR = /usr/share/java
+SYS_LIBJARDIR = /usr/share/bzdev
 SYS_API_DOCDIR = /usr/share/doc/librdanim-doc
 SYS_JAVADOCS = $(SYS_API_DOCDIR)/api
 SYS_EXAMPLES = $(SYS_API_DOCDIR)/examples
 
 EXTDIR = $(SYS_LIBJARDIR)
-EXTLIBS1 = $(EXTDIR)/libbzdev-base.jar:$(EXTDIR)/libbzdev-desktop.jar
-EXTLIBS2 = $(EXTDIR)/libbzdev-devqsim.jar:$(EXTDIR)/libbzdev-anim2d.jar
-EXTLIBS = $(EXTLIBS1):$(EXTLIBS2):$(EXTDIR)/libbzdev-obnaming.jar
+EXTLIBS = $(EXTDIR)
 
-PROC_PATH1 = $(EXTDIR)/libbzdev-base.jar:$(EXTDIR)/libbzdev-obnaming.jar
-PROC_PATH = $(PROC_PATH1):$(EXTDIR)/libbzdev-parmproc.jar
 ALL = jarfile javadocs
 
 all: $(ALL)
@@ -96,13 +92,12 @@ JDOC_EXCLUDE = org.bzdev.roadanim.lpack
 
 FILES = $(RDANIM_JFILES) $(RESOURCES) $(RDANIM_MODINFO)
 
-
 $(JARFILE): $(FILES) $(TMPSRC) $(JROOT_JARDIR)/libbzdev.jar \
 	    META-INF/services/$(NOF_SERVICE)
 	mkdir -p mods/org.bzdev.rdanim
 	mkdir -p BUILD
 	javac -d mods/org.bzdev.rdanim -p $(EXTLIBS) \
-		--processor-path $(PROC_PATH) -s tmpsrc/org.bzdev.rdanim \
+		--processor-module-path $(EXTLIBS) -s tmpsrc/org.bzdev.rdanim \
 		$(RDANIM_MODINFO) $(RDANIM_JFILES) \
 		$(RDANIM_DIR)/$(BZDEV)/roadanim/lpack/DefaultClass.java
 	for i in $(RDANIM_RESOURCES) ; do mkdir -p mods/`dirname $$i` ; \
@@ -121,13 +116,9 @@ jdclean:
 	@ [ -d BUILD/api ] && rm -rf BUILD/api  || echo -n
 	@ [ -d BUILD/alt-api ] && rm -rf BUILD/alt-api || echo -n
 
-
-
 javadocs: $(JROOT_JAVADOCS)/index.html
 
-
 altjavadocs: $(JROOT_ALT_JAVADOCS)/index.html
-
 
 JAVA_VERSION=11
 JAVADOC_LIBS = BUILD/librdanim.jar:$(EXTLIBS)
