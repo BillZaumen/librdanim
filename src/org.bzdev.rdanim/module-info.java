@@ -14,7 +14,6 @@ module org.bzdev.rdanim {
     requires org.bzdev.desktop;
     requires org.bzdev.devqsim;
     requires org.bzdev.anim2d;
-    requires static org.bzdev.parmproc;
     provides org.bzdev.obnaming.NamedObjectFactory with
 	org.bzdev.roadanim.BicycleFactory,
 	org.bzdev.roadanim.CarFactory,
