@@ -2,7 +2,10 @@
  * Module providing animation objects representing bicyles, cars, and
  * pedestrians.
  * <P>
-
+ * This module augments the {@link org.bzdev.anim2d} module by adding
+ * a few classes that represent objects one might find on a road so
+ * that one can produce animations showing the interaction of
+ * motor vehicles, bicycles, and pedestrians.
  */
 module org.bzdev.rdanim {
     exports org.bzdev.roadanim;
