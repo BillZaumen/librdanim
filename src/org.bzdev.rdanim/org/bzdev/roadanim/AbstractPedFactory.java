@@ -23,7 +23,10 @@ import java.util.HashMap;
 
 @FactoryParmManager(value="AbstractPedFactoryParmManager",
 		    labelResourceBundle="*.lpack.PedestrianLabels",
-		    tipResourceBundle="*.lpack.PedestrianTips")
+		    tipResourceBundle="*.lpack.PedestrianTips",
+		    stdFactory="PedestrianFactory",
+		    namerVariable="a2d",
+		    namerDocumentation="the animation")
 public abstract class AbstractPedFactory <Obj extends Pedestrian>
     extends DirectedObject2DFactory<Obj>
 {

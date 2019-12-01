@@ -27,7 +27,10 @@ import java.util.HashMap;
 @FactoryParmManager(value="AbstractBicycleFactoryParmManager",
 		    labelResourceBundle="*.lpack.BicycleLabels",
 		    tipResourceBundle="*.lpack.BicycleTips",
-		    docResourceBundle="*.lpack.BicycleDocs")
+		    docResourceBundle="*.lpack.BicycleDocs",
+		    stdFactory="BicycleFactory",
+		    namerVariable="a2d",
+		    namerDocumentation="the animation")
 public abstract class AbstractBicycleFactory <Obj extends Bicycle>
     extends DirectedObject2DFactory<Obj>
 {

@@ -26,7 +26,10 @@ import java.util.HashMap;
 @FactoryParmManager(value="AbstractCarFactoryParmManager",
 		    labelResourceBundle="*.lpack.CarLabels",
 		    tipResourceBundle="*.lpack.CarTips",
-		    docResourceBundle = "*.lpack.CarDocs")
+		    docResourceBundle = "*.lpack.CarDocs",
+		    stdFactory="CarFactory",
+		    namerVariable="a2d",
+		    namerDocumentation="the animation")
 public abstract class AbstractCarFactory <Obj extends Car>
     extends DirectedObject2DFactory<Obj>
 {
