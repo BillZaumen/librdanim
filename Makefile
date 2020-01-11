@@ -21,20 +21,23 @@ TMPSRC = $(JROOT)/tmpsrc/
 #
 # System directories (that contains JAR files, etc.)
 #
-SYS_LIBJARDIR = /usr/share/bzdev
+SYS_LIBJARDIR = /usr/share/java
+SYS_BZDEVDIR = /usr/share/bzdev
+
 SYS_API_DOCDIR = /usr/share/doc/librdanim-doc
 SYS_JAVADOCS = $(SYS_API_DOCDIR)/api
 SYS_EXAMPLES = $(SYS_API_DOCDIR)/examples
 
-EXTDIR = $(SYS_LIBJARDIR)
+EXTDIR = $(SYS_BZDEVDIR)
 EXTLIBS = $(EXTDIR)
 
 ALL = jarfile javadocs
 
 all: $(ALL)
 
-# Target for the standard Java extension directory
+# Target for the standard Java directory
 LIBJARDIR = $(DESTDIR)$(SYS_LIBJARDIR)
+BZDEVDIR = $(DESTDIR)$(SYS_BZDEVDIR)
 
 LIBJARDIR_SED=$(shell echo $(SYS_LIBJARDIR) | sed  s/\\//\\\\\\\\\\//g)
 
@@ -96,8 +99,8 @@ $(JARFILE): $(FILES) $(TMPSRC) $(JROOT_JARDIR)/libbzdev.jar \
 	    META-INF/services/$(NOF_SERVICE)
 	mkdir -p mods/org.bzdev.rdanim
 	mkdir -p BUILD
-	javac -d mods/org.bzdev.rdanim -p $(EXTLIBS) \
-		--processor-module-path $(EXTLIBS) -s tmpsrc/org.bzdev.rdanim \
+	javac -d mods/org.bzdev.rdanim -p $(EXTDIR) \
+		--processor-module-path $(EXTDIR) -s tmpsrc/org.bzdev.rdanim \
 		$(RDANIM_MODINFO) $(RDANIM_JFILES) \
 		$(RDANIM_DIR)/$(BZDEV)/roadanim/lpack/DefaultClass.java
 	for i in $(RDANIM_RESOURCES) ; do mkdir -p mods/`dirname $$i` ; \
@@ -162,6 +165,8 @@ $(JROOT_ALT_JAVADOCS)/index.html: $(RDANIM_JFILES) overview.html $(JARFILE) \
 
 install: install-lib install-links install-docs
 
+uninstall: uninstall-docs uninstall-links uninstall-lib
+
 install-lib: $(JARFILE)
 	install -d $(LIBJARDIR)
 	install -m 0644 $(JARFILE) $(LIBJARDIR)/librdanim-$(VERSION).jar
@@ -182,3 +187,14 @@ install-docs: javadocs
 		done
 	install -d $(EXAMPLES)
 	install -m 0644 $(JROOT_EXAMPLES)/example.js $(EXAMPLES)/example.js
+
+uninstall-lib:
+	rm -f $(LIBJARDIR)/librdanim-$(VERSION).jar
+
+uninstall-links:
+	rm -f $(LIBJARDIR)/librdanim.jar
+
+uninstall-docs:
+	rm -fr $(JAVADOCS)
+	rm -rf $(EXAMPLES)
+	rmdir $(API_DOCDIR) || echo -n
