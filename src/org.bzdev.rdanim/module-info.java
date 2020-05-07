@@ -14,7 +14,7 @@ module org.bzdev.rdanim {
     requires java.desktop;
     requires org.bzdev.base;
     requires org.bzdev.obnaming;
-    requires org.bzdev.desktop;
+    requires org.bzdev.graphics;
     requires org.bzdev.devqsim;
     requires org.bzdev.anim2d;
     provides org.bzdev.obnaming.NamedObjectFactory with
