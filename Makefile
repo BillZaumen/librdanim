@@ -126,6 +126,15 @@ altjavadocs: $(JROOT_ALT_JAVADOCS)/index.html
 JAVA_VERSION=11
 JAVADOC_LIBS = BUILD/librdanim.jar:$(EXTLIBS)
 
+LSNOF0= $(SYS_BZDEVDIR)/libbzdev-
+LSNOF1 = $(LSNOF0)base.jar:$(LSNOF0)math.jar:$(LSNOF0)obnaming.jar
+LSNOF2 = $(LSNOF0)graphics.jar:$(LSNOF0)devqsim.jar:$(LSNOF0)anim2d.jar
+LSNOF3 = $(SYS_BZDEVDIR)/lsnof.jar
+
+# need a custom version because librdanim.jar is in $(SYS_BZDEVDIR)
+# after the package is installed.
+LSNOF = java -p $(LSNOF1):$(LSNOF2):$(LSNOF3) -m org.bzdev.lsnof
+
 $(JROOT_JAVADOCS)/index.html: $(RDANIM_JFILES) overview.html $(JARFILE)
 	mkdir -p $(JROOT_JAVADOCS)
 	rm -rf $(JROOT_JAVADOCS)/*
@@ -136,7 +145,7 @@ $(JROOT_JAVADOCS)/index.html: $(RDANIM_JFILES) overview.html $(JARFILE)
 		-link file:///usr/share/doc/libbzdev-doc/api/ \
 		-overview overview.html \
 		--module $(JDOC_MODULES) -exclude $(JDOC_EXCLUDE)
-	lsnof -d $(JROOT_JAVADOCS) -p $(JARFILE) \
+	$(LSNOF) -d $(JROOT_JAVADOCS) -p $(JARFILE) \
 	      --link file:///usr/share/doc/openjdk-$(JAVA_VERSION)-doc/api/ \
 	      --link file:///usr/share/doc/libbzdev-doc/api/ \
 	      --overview src/FactoryOverview.html 'org.bzdev.roadanim.*'
