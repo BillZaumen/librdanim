@@ -3,3 +3,4 @@ Class-Path: ./libbzdev-base.jar
   ./libbzdev-graphics.jar
   ./libbzdev-devqsim.jar
   ./libbzdev-anim2d.jar
+  ./libbzdev-math.jar

@@ -59,9 +59,29 @@ RDOCS = *.gif
 
 BZDEV = org/bzdev
 
-$(JROOT_JARDIR)/libbzdev.jar: $(EXTDIR)/libbzdev.jar
+$(JROOT_JARDIR)/libbzdev-base.jar: $(EXTDIR)/libbzdev-base.jar
 	mkdir -p $(JROOT_JARDIR)
-	ln -s $(EXTDIR)/libbzdev.jar $(JROOT_JARDIR)/libbzdev.jar
+	ln -s $(EXTDIR)/libbzdev-base.jar $(JROOT_JARDIR)/libbzdev-base.jar
+
+$(JROOT_JARDIR)/libbzdev-obnaming.jar: $(EXTDIR)/libbzdev-obnaming.jar
+	mkdir -p $(JROOT_JARDIR)
+	ln -s $(EXTDIR)/libbzdev-obnaming.jar \
+		$(JROOT_JARDIR)/libbzdev-obnaming.jar
+
+$(JROOT_JARDIR)/libbzdev-graphics.jar: $(EXTDIR)/libbzdev-graphics.jar
+	mkdir -p $(JROOT_JARDIR)
+	ln -s $(EXTDIR)/libbzdev-graphics.jar \
+		$(JROOT_JARDIR)/libbzdev-graphics.jar
+
+$(JROOT_JARDIR)/libbzdev-devqsim.jar: $(EXTDIR)/libbzdev-devqsim.jar
+	mkdir -p $(JROOT_JARDIR)
+	ln -s $(EXTDIR)/libbzdev-devqsim.jar \
+		$(JROOT_JARDIR)/libbzdev-devqsim.jar
+
+$(JROOT_JARDIR)/libbzdev-anim2d.jar: $(EXTDIR)/libbzdev-anim2d.jar
+	mkdir -p $(JROOT_JARDIR)
+	ln -s $(EXTDIR)/libbzdev-anim2d.jar $(JROOT_JARDIR)/libbzdev-anim2d.jar
+
 
 JFILES = $(wildcard $(BZDEV)/roadanim/*.java)
 
@@ -85,24 +105,32 @@ NOF_SERVICE = org.bzdev.obnaming.NamedObjectFactory
 
 RDANIM_DIR = ./src/org.bzdev.rdanim
 RDANIM_MODINFO = $(RDANIM_DIR)/module-info.java
-RDANIM_JFILES = $(wildcard $(RDANIM_DIR)/$(BZDEV)/roadanim/*.java)
+RDANIM_JFILES = $(wildcard $(RDANIM_DIR)/$(BZDEV)/roadanim/*.java) \
+	$(wildcard $(RDANIM_DIR)/$(BZDEV)/roadanim/provider/*.java)
 RDANIM_RESOURCES1 = \
-	$(wildcard $(RDANIM_DIR)/$(BZDEV)/roadanim/lpack/*.properties)
+	$(wildcard $(RDANIM_DIR)/$(BZDEV)/roadanim/provider/*.yaml) \
+	$(wildcard $(RDANIM_DIR)/$(BZDEV)/roadanim/lpack/*.properties) \
+	$(wildcard $(RDANIM_DIR)/$(BZDEV)/roadanim/provider/lpack/*.properties)
 RDANIM_RESOURCES = $(subst ./src/,,$(RDANIM_RESOURCES1))
 
 JDOC_MODULES = org.bzdev.rdanim
 JDOC_EXCLUDE = org.bzdev.roadanim.lpack
 
-FILES = $(RDANIM_JFILES) $(RESOURCES) $(RDANIM_MODINFO)
+FILES = $(RDANIM_JFILES) $(RDANIM_RESOURCES1) $(RDANIM_MODINFO)
 
-$(JARFILE): $(FILES) $(TMPSRC) $(JROOT_JARDIR)/libbzdev.jar \
+$(JARFILE): $(FILES) $(TMPSRC) $(JROOT_JARDIR)/libbzdev-base.jar \
+	    $(JROOT_JARDIR)/libbzdev-obnaming.jar \
+	    $(JROOT_JARDIR)/libbzdev-graphics.jar \
+	    $(JROOT_JARDIR)/libbzdev-devqsim.jar \
+	    $(JROOT_JARDIR)/libbzdev-anim2d.jar \
 	    META-INF/services/$(NOF_SERVICE)
 	mkdir -p mods/org.bzdev.rdanim
 	mkdir -p BUILD
 	javac -d mods/org.bzdev.rdanim -p $(EXTDIR) \
 		--processor-module-path $(EXTDIR) -s tmpsrc/org.bzdev.rdanim \
 		$(RDANIM_MODINFO) $(RDANIM_JFILES) \
-		$(RDANIM_DIR)/$(BZDEV)/roadanim/lpack/DefaultClass.java
+		$(RDANIM_DIR)/$(BZDEV)/roadanim/lpack/DefaultClass.java \
+		$(RDANIM_DIR)/$(BZDEV)/roadanim/provider/lpack/DefaultClass.java
 	for i in $(RDANIM_RESOURCES) ; do mkdir -p mods/`dirname $$i` ; \
 		cp src/$$i mods/$$i ; done
 	mkdir -p mods/org.bzdev.rdanim/META-INF/services

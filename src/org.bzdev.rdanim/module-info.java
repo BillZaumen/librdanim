@@ -9,16 +9,21 @@
  */
 module org.bzdev.rdanim {
     exports org.bzdev.roadanim;
+    exports org.bzdev.roadanim.provider;
     opens org.bzdev.roadanim.lpack;
+    opens org.bzdev.roadanim.provider.lpack;
     requires java.base;
     requires java.desktop;
     requires org.bzdev.base;
     requires org.bzdev.obnaming;
     requires org.bzdev.graphics;
+    requires org.bzdev.math;
     requires org.bzdev.devqsim;
     requires org.bzdev.anim2d;
     provides org.bzdev.obnaming.NamedObjectFactory with
 	org.bzdev.roadanim.BicycleFactory,
 	org.bzdev.roadanim.CarFactory,
 	org.bzdev.roadanim.PedestrianFactory;
+    provides org.bzdev.lang.spi.ONLauncherData with
+	org.bzdev.roadanim.provider.RoadAnimationLauncherData;
 }

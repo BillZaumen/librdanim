@@ -72,7 +72,33 @@ sctest: classes
 	mkdir -p tmp
 	(cd tmp; rm -f *.png)
 	scrunner --codebase ../BUILD/librdanim.jar -d:tmpdir:tmp test.js
-	$(AVCONV) -r 25 -f image2 -i tmp/col-%03d.png -y -r 25 sctest.webm
+	$(AVCONV) -r 25 -f image2 -i tmp/col-%03d.png -y -r 25 sctest.mp4
+
+sctest-esp: classes
+	mkdir -p tmp
+	(cd tmp; rm -f *.png)
+	scrunner --codebase ../BUILD/librdanim.jar -d:tmpdir:tmp test.esp
+	$(AVCONV) -r 25 -f image2 -i tmp/col-%03d.png -y -r 25 sctest.mp4
+
+
+sctest-y: classes
+	mkdir -p tmp
+	(cd tmp; rm -f *.png)
+	yrunner --stackTrace  --codebase ../BUILD \
+		--add-modules org.bzdev.rdanim \
+		 -d:tmpdir:tmp	anim2d,rdanim test.yaml
+
+sctest-y-dryrun: classes
+	mkdir -p tmp
+	(cd tmp; rm -f *.png)
+	yrunner --stackTrace  --codebase ../BUILD \
+		 -d:tmpdir:tmp --dryrun anim2d,rdanim test.yaml
+
+sctest-yy: classes
+	mkdir -p tmp
+	(cd tmp; rm -f *.png)
+	yrunner --trustLevel=2  -d:tmpdir:tmp anim2d,rdanim test.yaml
+
 
 sctest1: classes
 	mkdir -p tmp

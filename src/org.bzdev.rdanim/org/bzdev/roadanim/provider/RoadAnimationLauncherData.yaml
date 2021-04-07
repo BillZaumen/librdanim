@@ -1,0 +1,29 @@
+%YAML 1.2
+---
+  returnTypes:
+    - org.bzdev.roadanim.Bicycle 
+    - org.bzdev.roadanim.BicycleFactory
+    - org.bzdev.roadanim.Car
+    - org.bzdev.roadanim.CarFactory
+    - org.bzdev.roadanim.Pedestrian
+    - org.bzdev.roadanim.PedestrianFactory
+    
+  argumentTypes:
+    - org.bzdev.roadanim.Bicycle 
+    - org.bzdev.roadanim.BicycleFactory
+    - org.bzdev.roadanim.Car
+    - org.bzdev.roadanim.CarFactory
+    - org.bzdev.roadanim.Pedestrian
+    - org.bzdev.roadanim.PedestrianFactory
+
+  functionClases:
+     - org.bzdev.roadanim.RoadAnimation
+
+  methodClasses:
+    - org.bzdev.roadanim.Bicycle 
+    - org.bzdev.roadanim.BicycleFactory
+    - org.bzdev.roadanim.Car
+    - org.bzdev.roadanim.CarFactory
+    - org.bzdev.roadanim.Pedestrian
+    - org.bzdev.roadanim.PedestrianFactory
+...
