@@ -139,7 +139,9 @@ public class Car extends DirectedObject2D {
 	if (ell < 0) ell = -ell;
     }
 
-    Color color;
+    static final Color DEFAULT_COLOR = Color.RED;
+
+    Color color /*= DEFAULT_COLOR */;
 
     /**
      * Get the color of the vehicle.

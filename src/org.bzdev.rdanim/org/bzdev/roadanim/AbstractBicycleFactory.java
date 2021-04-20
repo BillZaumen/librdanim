@@ -36,13 +36,22 @@ public abstract class AbstractBicycleFactory <Obj extends Bicycle>
 {
     Animation2D animation;
 
-    @CompoundParm("helmetColor") ColorParm hcparm = new ColorParm(Color.YELLOW);
-    @CompoundParm("bicycleColor") ColorParm bcparm = new ColorParm(Color.RED);
+    static final class YELLOW extends ColorParm {
+	public YELLOW() {super(Color.YELLOW);}
+    }
+
+    @CompoundParm("helmetColor") ColorParm hcparm = new YELLOW();
+    @CompoundParm("bicycleColor") ColorParm bcparm = new ColorParm.RED();
     @PrimitiveParm("lookString") String lookString = "Look";
     @PrimitiveParm("helmetAngle") double helmetAngle = 0.0;
     @PrimitiveParm("looking") boolean looking = false;
+
+    static final class LOOKING_FONT_COLOR  extends ColorParm {
+	public LOOKING_FONT_COLOR() {super(Color.YELLOW.darker());}
+    }
+
     @CompoundParm("lookingFontColor") ColorParm lookingFontColor =
-	new ColorParm(Color.YELLOW.darker());
+	new LOOKING_FONT_COLOR();
 
     @PrimitiveParm(value = "bikeHead",
 		   lowerBound = "0.0", lowerBoundClosed = false)

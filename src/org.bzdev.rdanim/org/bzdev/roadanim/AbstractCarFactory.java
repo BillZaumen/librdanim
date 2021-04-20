@@ -22,7 +22,6 @@ import java.util.HashMap;
  * by this factory.
  * </IFRAME>
  */
-
 @FactoryParmManager(value="AbstractCarFactoryParmManager",
 		    labelResourceBundle="*.lpack.CarLabels",
 		    tipResourceBundle="*.lpack.CarTips",
@@ -42,8 +41,13 @@ public abstract class AbstractCarFactory <Obj extends Car>
     @PrimitiveParm("lookString") String lookString = "Look";
     @PrimitiveParm("lookAngle") double lookAngle = 0.0;
     @PrimitiveParm("looking") boolean looking = false;
+
+    final class DARK_YELLOW extends ColorParm {
+	public DARK_YELLOW() {super(Color.YELLOW.darker());}
+    }
+
     @CompoundParm("lookingFontColor") ColorParm lookingFontColor =
-	new ColorParm(Color.YELLOW.darker());
+	new DARK_YELLOW();
 
     @PrimitiveParm(value = "width", lowerBound = "0.0",
 		   lowerBoundClosed = false)
@@ -72,9 +76,9 @@ public abstract class AbstractCarFactory <Obj extends Car>
 		   lowerBoundClosed  = true)
 	double rearOffset = 0.3;
 
-    @CompoundParm("color") ColorParm cparm = new ColorParm(Color.RED);
+    @CompoundParm("color") ColorParm cparm = new ColorParm.RED();
     @CompoundParm("windshieldColor") ColorParm wscparm
-	= new ColorParm(Color.WHITE);
+	= new ColorParm.WHITE();
 
     @PrimitiveParm(value="driverOffsetX") double driverX = 0.3;
     @PrimitiveParm(value="driverOffsetY") double driverY = 0.3;
@@ -94,8 +98,13 @@ public abstract class AbstractCarFactory <Obj extends Car>
     double leftBlindSpotLength = 5.0;
     @PrimitiveParm(value="rightBlindSpotLength", lowerBound="0.0")
     double rightBlindSpotLength = 5.0;
+
+    static final class BLIND_SPOT_COLOR extends ColorParm {
+	public BLIND_SPOT_COLOR() {super(Car.BLIND_SPOT_COLOR_DEFAULT);}
+    }
+
     @CompoundParm("blindSpotColor") ColorParm blindSpotColor =
-	new ColorParm(Car.BLIND_SPOT_COLOR_DEFAULT);
+	new BLIND_SPOT_COLOR();
 
     @PrimitiveParm("leftBlindSpotVisible") boolean leftBlindSpotVisible=false;
     @PrimitiveParm("rightBlindSpotVisible") boolean rightBlindSpotVisible=false;

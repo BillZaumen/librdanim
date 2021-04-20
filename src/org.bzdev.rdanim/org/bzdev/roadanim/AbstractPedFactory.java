@@ -32,12 +32,19 @@ public abstract class AbstractPedFactory <Obj extends Pedestrian>
 {
     Animation2D animation;
 
-    @CompoundParm("eyeColor") ColorParm ecparm =
-	new ColorParm(Pedestrian.EYE_COLOR);
-    @CompoundParm("hairColor") ColorParm hcparm =
-	new ColorParm(Pedestrian.HAIR_COLOR);
-    @CompoundParm("faceColor") ColorParm fcparm =
-	new ColorParm(Pedestrian.FACE_COLOR);
+    static final class EYE_COLOR extends ColorParm {
+	public EYE_COLOR() {super(Pedestrian.EYE_COLOR);}
+    }
+    static final class HAIR_COLOR extends ColorParm {
+	public HAIR_COLOR() {super(Pedestrian.HAIR_COLOR);}
+    }
+    static final class FACE_COLOR extends ColorParm {
+	public FACE_COLOR() {super(Pedestrian.FACE_COLOR);}
+    }
+
+    @CompoundParm("eyeColor") ColorParm ecparm = new EYE_COLOR();
+    @CompoundParm("hairColor") ColorParm hcparm = new HAIR_COLOR();
+    @CompoundParm("faceColor") ColorParm fcparm = new FACE_COLOR();
 
     @PrimitiveParm(value="radius",
 		   lowerBound = "0.0",

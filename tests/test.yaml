@@ -604,13 +604,14 @@
 
 
  - create:
-    - var symbolX
+    - var: symbolX
       name: X
       factory: alf
       configuration:
        - {zorder: 20, visible: false}
        - {withPrefix: "object", withIndex: [
-          [{type: "TEXT", x: s7, y: -MKS.feet(2) - 0.75,
+          [{type: "TEXT", x: !bzdev!esp "= s7",
+	    y: !bzdev!esp "= -MKS.feet(2) - 0.75",
             text: "X"},
            {withPrefix: "fontParms",
             config: [{style: "BOLD", size: 64,
