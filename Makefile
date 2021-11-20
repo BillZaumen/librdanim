@@ -90,6 +90,10 @@ RESOURCES = $(wildcard $(BZDEV)/roadanim/lpack/*.properties)
 
 include MajorMinor.mk
 
+#
+# Set DARKMODE to --darkmode to turn on dark mode.
+#
+DARKMODE =
 
 
 $(TMPSRC):
@@ -114,7 +118,7 @@ RDANIM_RESOURCES1 = \
 RDANIM_RESOURCES = $(subst ./src/,,$(RDANIM_RESOURCES1))
 
 JDOC_MODULES = org.bzdev.rdanim
-JDOC_EXCLUDE = org.bzdev.roadanim.lpack
+JDOC_EXCLUDE = org.bzdev.roadanim.lpack:org.bzdev.roadanim.provider
 
 FILES = $(RDANIM_JFILES) $(RDANIM_RESOURCES1) $(RDANIM_MODINFO)
 
@@ -166,14 +170,17 @@ LSNOF = java -p $(LSNOF1):$(LSNOF2):$(LSNOF3) -m org.bzdev.lsnof
 $(JROOT_JAVADOCS)/index.html: $(RDANIM_JFILES) overview.html $(JARFILE)
 	mkdir -p $(JROOT_JAVADOCS)
 	rm -rf $(JROOT_JAVADOCS)/*
+	styleoption=`[ -z "$(DARKMODE)" ] && echo \
+		|| echo --main-stylesheet stylesheet.css`; \
 	javadoc -d $(JROOT_JAVADOCS) --module-path $(JAVADOC_LIBS) \
 		--module-source-path src:tmpsrc \
 		--add-modules org.bzdev.rdanim \
+		$$styleoption \
 		-link file:///usr/share/doc/openjdk-$(JAVA_VERSION)-doc/api \
 		-link file:///usr/share/doc/libbzdev-doc/api/ \
-		-overview overview.html \
-		--module $(JDOC_MODULES) -exclude $(JDOC_EXCLUDE)
-	$(LSNOF) -d $(JROOT_JAVADOCS) -p $(JARFILE) \
+		-overview overview.html -exclude $(JDOC_EXCLUDE) \
+		--module $(JDOC_MODULES)
+	$(LSNOF) $(DARKMODE)  -d $(JROOT_JAVADOCS) -p $(JARFILE) \
 	      --link file:///usr/share/doc/openjdk-$(JAVA_VERSION)-doc/api/ \
 	      --link file:///usr/share/doc/libbzdev-doc/api/ \
 	      --overview src/FactoryOverview.html 'org.bzdev.roadanim.*'
@@ -182,9 +189,12 @@ $(JROOT_ALT_JAVADOCS)/index.html: $(RDANIM_JFILES) overview.html $(JARFILE) \
 		$(JROOT_JAVADOCS)/index.html
 	mkdir -p $(JROOT_ALT_JAVADOCS)
 	rm -rf $(JROOT_ALT_JAVADOCS)/*
+	styleoption=`[ -z "$(DARKMODE)" ] && echo \
+		|| echo --main-stylesheet stylesheet.css`; \
 	javadoc -d $(JROOT_ALT_JAVADOCS) --module-path $(JAVADOC_LIBS) \
 		--module-source-path src:tmpsrc \
 		--add-modules org.bzdev.rdanim \
+		$$styleoption \
 		-linkoffline ../../../bzdev/doc/api \
 			file:///usr/share/doc/libbzdev-doc/api/ \
 		-linkoffline \

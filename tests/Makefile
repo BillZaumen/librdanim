@@ -1,4 +1,3 @@
-
 CPATH = classes:../BUILD/librdanim.jar:/usr/share/java/libbzdev.jar
 
 JAVA = java -classpath $(CPATH)
@@ -26,8 +25,12 @@ doortest: classes
 	$(JAVAC) DoorTest.java
 	$(JAVA) DoorTest
 
-dvideo:
+dvideo-js:
 	scrunner --codebase ../BUILD/librdanim.jar dvideo.js
+
+dvideo-esp:
+	scrunner --codebase ../BUILD/librdanim.jar dvideo.esp
+
 
 dftest: classes
 	$(JAVAC) DoorFactoryTest.java
@@ -122,28 +125,50 @@ sctest-yy: classes
 # This will not work as expected if the librdanim packages are installed
 # as scrunner will use those instead
 #
-sctest1: classes
+sctest1-js: classes
 	mkdir -p tmp
 	(cd tmp; rm -f *.png)
 	scrunner --codebase ../BUILD/librdanim.jar -d:tmpdir:tmp test1.js
 
-#
-# This will not work as expected if the librdanim packages are installed
-# as scrunner will use those instead
-#
-sctest2: classes
+sctest1-esp: classes
 	mkdir -p tmp
 	(cd tmp; rm -f *.png)
-	scrunner --codebase ../BUILD/librdanim.jar -d:tmpdir:tmp test2.js
+	scrunner --codebase ../BUILD/librdanim.jar -d:tmpdir:tmp test1.esp
 
 #
 # This will not work as expected if the librdanim packages are installed
 # as scrunner will use those instead
 #
-sctest3: classes
+sctest2-js: classes
+	mkdir -p tmp
+	(cd tmp; rm -f *.png)
+	scrunner --codebase ../BUILD/librdanim.jar -d:tmpdir:tmp test2.js
+#
+# This will not work as expected if the librdanim packages are installed
+# as scrunner will use those instead
+#
+sctest2-esp: classes
+	mkdir -p tmp
+	(cd tmp; rm -f *.png)
+	scrunner --codebase ../BUILD/librdanim.jar -d:tmpdir:tmp test2.esp
+
+#
+# This will not work as expected if the librdanim packages are installed
+# as scrunner will use those instead
+#
+sctest3-js: classes
 	mkdir -p tmp
 	(cd tmp; rm -f *.png)
 	scrunner --codebase ../BUILD/librdanim.jar -d:tmpdir:tmp test3.js
+
+#
+# This will not work as expected if the librdanim packages are installed
+# as scrunner will use those instead
+#
+sctest3-esp: classes
+	mkdir -p tmp
+	(cd tmp; rm -f *.png)
+	scrunner --codebase ../BUILD/librdanim.jar -d:tmpdir:tmp test3.esp
 
 prtest: classes
 	$(JAVAC) PrintTest.java

@@ -1,33 +1,26 @@
- // tmpdir will be bound to a directory accessor by scrunner
+// tmpdir will be bound to a directory accessor by scrunner
 
-// importPackage(org.bzdev.anim2d);
-// importPackage(org.bzdev.roadanim);
-scripting.importClasses("org.bzdev.roadanim",
-			["CarFactory", "BicycleFactory", "PedestrianFactory"]);
-scripting.importClasses("org.bzdev.anim2d",
-			["Animation2D", "GraphViewFactory", "KinematicOps2D",
-			 "AnimationPath2DFactory", "AnimationLayer2DFactory"]);
-scripting.importClass("org.bzdev.util.units.MKS");
+import (org.bzdev.anim2d, [Animation2D, GraphViewFactory, GraphView,
+			   AnimationPath2DFactory, AnimationPath2D,
+			   AnimationLayer2DFactory, AnimationLayer2D,
+			   KinematicOps2D]);
+import (org.bzdev.roadanim, [CarFactory, Car, BicycleFactory, Bicycle,
+			     PedestrianFactory, Pedestrian]);
+import (org.bzdev.util.units.MKS);
 
-scripting.finishImport();
+var tmpdir ?= throw "tmpdir undefined (need scrunner -d:tmpdir:TMP option)";
 
-if (typeof(tmpdir) == undefined) {
-    err.println("tmpdir undefined (need scrunner -d:tmpdir:TMP option)");
-    exit(1);
-}
+var a2d = scripting.create(Animation2D.class, scripting,
+			   1920, 1080, 10000.0, 400);
 
-a2d = scripting.create(Animation2D.class, scripting,
-		       1920, 1080, 10000.0, 400);
-
-gvf = a2d.createFactory(GraphViewFactory.class);
-cf = a2d.createFactory(CarFactory.class);
-bf = a2d.createFactory(BicycleFactory.class);
-pedf = a2d.createFactory(PedestrianFactory.class);
-pathf = a2d.createFactory(AnimationPath2DFactory.class);
-alf = a2d.createFactory(AnimationLayer2DFactory.class);
+var gvf = a2d.createFactory(GraphViewFactory.class);
+var cf = a2d.createFactory(CarFactory.class);
+var bf = a2d.createFactory(BicycleFactory.class);
+var pedf = a2d.createFactory(PedestrianFactory.class);
+var pathf = a2d.createFactory(AnimationPath2DFactory.class);
+var alf = a2d.createFactory(AnimationLayer2DFactory.class);
 
 var scaleFactor = 1080.0/MKS.feet(60.0);
-
 a2d.setRanges(0.0, 0.0, 0.0, 0.5, scaleFactor, scaleFactor);
 
 var pathConfig =
@@ -42,6 +35,7 @@ var vpath = pathf.createObject("vpath", [
 	{"type": "SEG_END", "x": 70.0, "y": 0.0}]}
 ]);
 
+// purposely introduce an error
 var gv = gvf.createObject("view", [
     {initialX: 1.0, initialY: 0.0},
     {xFrameFraction: 0.0, yFrameFraction: 0.5},
@@ -80,13 +74,8 @@ var car1 = cf.createObject("car1", [
 
 
 var maxFrames = a2d.estimateFrameCount(t1end + 5.0);
-java.lang.System.out.println("maxFrames = " + maxFrames);
+global.getWriter().println("maxFrames = " + maxFrames);
 a2d.initFrames(maxFrames, "col-", "png", tmpdir);
-a2d.scheduleFrames(0.0, maxFrames);
+a2d.scheduleFrames(0, maxFrames);
 
-try {
-    a2d.run();
-} catch (ex) {
-    println(ex.javaException.getMessage());
-    ex.javaException.printStackTrace(java.lang.System.out);
-}
+a2d.run();

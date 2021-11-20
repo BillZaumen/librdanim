@@ -1,23 +1,35 @@
 // tmpdir will be bound to a directory accessor by scrunner
 
-importPackage(org.bzdev.anim2d);
-importPackage(org.bzdev.roadanim);
-importClass(org.bzdev.util.units.MKS);
+// importPackage(org.bzdev.anim2d);
+// importPackage(org.bzdev.roadanim);
+// importClass(org.bzdev.util.units.MKS);
+
+scripting.importClasses ("org.bzdev.anim2d",
+			 ["Animation2D", "GraphViewFactory", "GraphView",
+			  "AnimationPath2DFactory", "AnimationPath2D",
+			  "AnimationLayer2DFactory", "AnimationLayer2D",
+			   "KinematicOps2D"]);
+scripting.importClasses ("org.bzdev.roadanim",
+			 ["CarFactory", "Car",
+			  "BicycleFactory", "Bicycle",
+			  "PedestrianFactory", "Pedestrian"]);
+scripting.importClass ("org.bzdev.util.units.MKS");
 
 if (typeof(tmpdir) == undefined) {
-    err.println("tmpdir undefined (need scrunner -d:tmpdir:TMP option)");
+    scripting.getErrorWriter()
+    .println("tmpdir undefined (need scrunner -d:tmpdir:TMP option)");
     exit(1);
 }
 
-a2d = scripting.create(Animation2D, scripting,
+a2d = scripting.create(Animation2D.class, scripting,
 		       1920, 1080, 10000.0, 400);
 
-gvf = a2d.createFactory(GraphViewFactory);
-cf = a2d.createFactory(CarFactory);
-bf = a2d.createFactory(BicycleFactory);
-pedf = a2d.createFactory(PedestrianFactory);
-pathf = a2d.createFactory(AnimationPath2DFactory);
-alf = a2d.createFactory(AnimationLayer2DFactory);
+gvf = a2d.createFactory(GraphViewFactory.class);
+cf = a2d.createFactory(CarFactory.class);
+bf = a2d.createFactory(BicycleFactory.class);
+pedf = a2d.createFactory(PedestrianFactory.class);
+pathf = a2d.createFactory(AnimationPath2DFactory.class);
+alf = a2d.createFactory(AnimationLayer2DFactory.class);
 
 scaleFactor = 1080.0/MKS.feet(60.0);
 a2d.setRanges(0.0, 0.0, 0.0, 0.5, scaleFactor, scaleFactor);
@@ -43,7 +55,7 @@ gv = gvf.createObject("view", [
 	{time: 0.0, path: vpath, u0: 0.0, velocity: 0,
 	 acceleration: MKS.mphPerSec(5)},
 	{time: 3.0, acceleration: 0.0},
-	{time2: 7.7, acceleration: -MKS.mphPerSec(7.5)},
+	{time: 7.7, acceleration: -MKS.mphPerSec(7.5)},
 	{time: 9.7, velocity: 0, acceleration: 0}]}
 ]);
 
@@ -73,13 +85,8 @@ car1 = cf.createObject("car1", [
 
 
 maxFrames = a2d.estimateFrameCount(t1end + 5.0);
-println("maxFrames = " + maxFrames);
+scripting.getWriter().println("maxFrames = " + maxFrames);
 a2d.initFrames(maxFrames, "col-", "png", tmpdir);
 a2d.scheduleFrames(0.0, maxFrames);
 
-try {
-    a2d.run();
-} catch (ex) {
-    println(ex.javaException.getMessage());
-    ex.javaException.printStackTrace(java.lang.System.out);
-}
+a2d.run();

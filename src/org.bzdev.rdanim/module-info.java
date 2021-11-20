@@ -9,7 +9,7 @@
  */
 module org.bzdev.rdanim {
     exports org.bzdev.roadanim;
-    exports org.bzdev.roadanim.provider;
+    // exports org.bzdev.roadanim.provider;
     opens org.bzdev.roadanim.lpack;
     opens org.bzdev.roadanim.provider.lpack;
     requires java.base;

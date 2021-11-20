@@ -1,24 +1,21 @@
 // tmpdir will be bound to a directory accessor by scrunner
 
-scripting.importClass("org.bzdev.anim2d.Animation2D");
-scripting.importClasses("org.bzdev.roadanim", ["Car", "CarFactory"]);
-scripting.importClass("org.bzdev.util.units.MKS");
+import (org.bzdev.anim2d.Animation2D);
+import (org.bzdev.roadanim, [Car, CarFactory]);
+import (org.bzdev.util.units.MKS);
 
-if (typeof(tmpdir) == undefined) {
-    err.println("tmpdir undefined (need scrunner -d:tmpdir:TMP option)");
-    exit(1);
-}
+var tmpdir ?= throw "tmpdir undefined (need scrunner -d:tmpdir:TMP option)";
 
-a2d = scripting.create(Animation2D.class, scripting,
+var a2d = scripting.create(Animation2D.class, scripting,
 		       1920, 1080, 10000.0, 400);
 
-sf = 1080.0/10.0;
+var sf = 1080.0/10.0;
 
 a2d.setRanges(0.0, 0.0, 0.0, 0.0, sf, sf);
 
-cf = a2d.createFactory(CarFactory.class);
+var cf = a2d.createFactory(CarFactory.class);
 
-car = cf.createObject("car", [
+var car = cf.createObject("car", [
     {zorder: 1, visible: true},
     {initialX: 5.0, initialY: 5.0},
     {looking: true, lookAngle: 0.0, lookString: "looking"},
@@ -30,10 +27,9 @@ car = cf.createObject("car", [
 	{time: 3.0, "lookingFontColor.green": 255},
 	{time: 4.0, looking: false}]}]);
 
-maxFrames = a2d.estimateFrameCount(5.0);
-scripting.getWriter().println("maxFrames = " + maxFrames);
+
+var maxFrames = a2d.estimateFrameCount(5.0);
+global.getWriter().println("maxFrames = " + maxFrames);
 a2d.initFrames(maxFrames, "col-", "png", tmpdir);
-a2d.scheduleFrames(0.0, maxFrames);
+a2d.scheduleFrames(0, maxFrames);
 a2d.run();
-
-

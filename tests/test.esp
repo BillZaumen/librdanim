@@ -22,10 +22,6 @@ scripting.finishImport();
 
 var tmpdir ?= throw "tmpdir undefined (need scrunner -d:tmpdir:TMP option)";
 
-/*
-var a2d = scripting.create(Animation2D.class, scripting,
-		       asInt(1920), asInt(1080), 10000.0, asInt(400));
-*/
 var a2d = new Animation2D(scripting, 1920, 1080, 10000.0, 400);
 
 var gvf = a2d.createFactory(GraphViewFactory.class);
