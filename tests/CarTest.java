@@ -83,14 +83,31 @@ public class CarTest {
 	TraceSet traceSet = new TraceSet(animation, "trace", true);
 	traceSet.setLevel(0);
 	animation.setTraceOutput(System.out);
+
 	car.addTraceSet(traceSet);
 
 	car.setPath(apath, 0.0, Math.toRadians(45.0), true, 1.0);
 	car.setPathVelocity(speed);
 	car.setPathAcceleration(0.0);
 
+	double dx = car.getDriverXGCS();
+	double dy = car.getDriverYGCS();
+	double cx = car.getX();
+	double cy = car.getY();
+	System.out.format("cx = %g, cy = %g\n", cx, cy);
+	System.out.format("dx = %g, dy = %g\n", dx, dy);
+	System.out.println("sep = " + Point2D.distance(dx, dy, cx, cy));
+
 	animation.scheduleCall(new Callable() {
 		public void call() {
+		    double dx = car.getDriverXGCS();
+		    double dy = car.getDriverYGCS();
+		    double cx = car.getX();
+		    double cy = car.getY();
+		    System.out.format("cx = %g, cy = %g\n", cx, cy);
+		    System.out.format("dx = %g, dy = %g\n", dx, dy);
+		    System.out.println("sep = "
+				       + Point2D.distance(dx, dy, cx, cy));
 		    System.out.println("entering skid mode");
 		    car.setSkidMode(true);
 		    car.setAngleRelative(true);

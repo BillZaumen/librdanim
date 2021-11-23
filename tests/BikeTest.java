@@ -63,6 +63,14 @@ public class BikeTest {
 	bicycle.configure(Color.YELLOW, Color.RED);
 	bicycle.setZorder(1, true);
 
+	double dx = bicycle.getSeatXGCS();
+	double dy = bicycle.getSeatYGCS();
+	double cx = bicycle.getX();
+	double cy = bicycle.getY();
+	System.out.format("cx = %g, cy = %g\n", cx, cy);
+	System.out.format("dx = %g, dy = %g\n", dx, dy);
+	System.out.println("sep = " + Point2D.distance(dx, dy, cx, cy));
+
 	// final Bicycle bicycle2 = new Bicycle(animation,"bicycle2", true);
 	// bicycle2.configure(Color.YELLOW, Color.RED, 2.0);
 
@@ -133,6 +141,14 @@ public class BikeTest {
 
 	animation.scheduleCall(new Callable() {
 		public void call() {
+		    double dx = bicycle.getSeatXGCS();
+		    double dy = bicycle.getSeatYGCS();
+		    double cx = bicycle.getX();
+		    double cy = bicycle.getY();
+		    System.out.format("cx = %g, cy = %g\n", cx, cy);
+		    System.out.format("dx = %g, dy = %g\n", dx, dy);
+		    System.out.println("sep = "
+				       + Point2D.distance(dx, dy, cx, cy));
 		    bicycle.setHelmetAngle(Math.toRadians(135.0));
 		    bicycle2.setHelmetAngle(Math.toRadians(135.0));
 		}
@@ -141,6 +157,14 @@ public class BikeTest {
 
 	animation.scheduleCall(new Callable() {
 		public void call() {
+		    double dx = bicycle.getSeatXGCS();
+		    double dy = bicycle.getSeatYGCS();
+		    double cx = bicycle.getX();
+		    double cy = bicycle.getY();
+		    System.out.format("cx = %g, cy = %g\n", cx, cy);
+		    System.out.format("dx = %g, dy = %g\n", dx, dy);
+		    System.out.println("sep = "
+				       + Point2D.distance(dx, dy, cx, cy));
 		    bicycle.setLooking(true);
 		    bicycle2.setLooking(true);
 		    bicycle3.setLooking(true);
@@ -150,6 +174,14 @@ public class BikeTest {
 
 	animation.scheduleCall(new Callable() {
 		public void call() {
+		    double dx = bicycle.getSeatXGCS();
+		    double dy = bicycle.getSeatYGCS();
+		    double cx = bicycle.getX();
+		    double cy = bicycle.getY();
+		    System.out.format("cx = %g, cy = %g\n", cx, cy);
+		    System.out.format("dx = %g, dy = %g\n", dx, dy);
+		    System.out.println("sep = "
+				       + Point2D.distance(dx, dy, cx, cy));
 		    bicycle.setLooking(false);
 		    bicycle2.setLooking(false);
 		    bicycle3.setLooking(false);
@@ -159,6 +191,14 @@ public class BikeTest {
 
 	animation.scheduleCall(new Callable() {
 		public void call() {
+		    double dx = bicycle.getSeatXGCS();
+		    double dy = bicycle.getSeatYGCS();
+		    double cx = bicycle.getX();
+		    double cy = bicycle.getY();
+		    System.out.format("cx = %g, cy = %g\n", cx, cy);
+		    System.out.format("dx = %g, dy = %g\n", dx, dy);
+		    System.out.println("sep = "
+				       + Point2D.distance(dx, dy, cx, cy));
 		    bicycle.setHelmetAngle(Math.toRadians(0.0));
 		    bicycle2.setHelmetAngle(Math.toRadians(0.0));
 		    bicycle3.setHelmetAngle(Math.toRadians(0.0));

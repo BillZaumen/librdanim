@@ -109,7 +109,6 @@ public abstract class AbstractCarFactory <Obj extends Car>
     @PrimitiveParm("leftBlindSpotVisible") boolean leftBlindSpotVisible=false;
     @PrimitiveParm("rightBlindSpotVisible") boolean rightBlindSpotVisible=false;
 
-
     @CompoundParmType(tipResourceBundle = "*.lpack.CarTimelineTips",
 		      labelResourceBundle = "*.lpack.CarTimelineLabels",
 		      docResourceBundle = "*.lpack.CarTimelineDocs")

@@ -40,16 +40,14 @@ import java.awt.geom.*;
  * with {@link java.lang.Math#atan2(double,double)}, with u determined
  * by the {@link org.bzdev.geom.BasicSplinePath2D} method
  * {@link org.bzdev.geom.BasicSplinePath2D#u(double) u(s)}.
- * The equation above assumes that the vehicle moves in the direction
- * of increasing s.  If s is decreasing, the vehicle will move in
- * reserve.  If the reference point is behind the rear wheel, a
- * similar analysis produces the same differential equation (with L
- * always being positive).  To have the vehicle oriented so that it
+ * To have the vehicle oriented so that it
  * moves backwards with increasing values of s, the differential
  * equation is
  * <P>
  * d&phi;/ds = (sin (&phi; - &theta;<sub>t</sub>))/L
  * <P>
+ * and again the sign will change if the vehicle is moving in the
+ * direction of decreasing s.
  */
 public class Car extends DirectedObject2D {
 
@@ -216,10 +214,20 @@ public class Car extends DirectedObject2D {
 
     boolean reverse = false;
 
+
     /**
      * Set reverse mode on or off.
-     * In reverse mode, for increasing path distance s, the rear
-     * of the car will tend to point ahead of the front of the car.
+     * When reverse mode is on, and one of the car's setPath
+     * methods is called with the relative-angle flag set to true
+     * (the default for a car), the car's angle will be flipped by
+     * 180 degrees.  In the case where the angle (relative to the tangent)
+     * is 0, the rear of the car will point in the same direction as the
+     * path's tangent vector.
+     * <P>
+     * This method should not be called after setPath is called and
+     * before the car reaches its final point along the path: otherwise
+     * the behavior may be erratic.
+     * @param reverse true to turn reverse mode on; false to turn it off.
      */
     public void setReverseMode(boolean reverse) {
 	update();
@@ -229,9 +237,12 @@ public class Car extends DirectedObject2D {
 
     /**
      * Determine if reverse mode is turned on.
-     * In reverse mode, for increasing path distance s, the rear
-     * of the car will tend to point ahead of the front of the car when
-     * no skid mode is turned on.
+     * When reverse mode is on, and one of the car's setPath
+     * methods is called with the relative-angle flag set to true
+     * (the default for a car), the car's angle will be flipped by
+     * 180 degrees.  In the case where the angle (relative to the tangent)
+     * is 0, the rear of the car will point in the same direction as the
+     * path's tangent vector.
      * @return true if reverse mode is in effect; false otherwise.
      */
     public boolean getReverseMode() {
@@ -257,7 +268,13 @@ public class Car extends DirectedObject2D {
 				  sx, u, Math.toDegrees(phi),
 				  Math.toDegrees(tangent));
 		*/
-		double result = (reverse)? Math.sin(phi-tangent)/ell:
+		boolean test = reverse;
+		// When the path velocidy is negative, s is decreasing
+		// but the Runge Kutta method assumes the path parameter
+		// is increasing, so we have to flip the sign when the
+		// path velocity is negative.
+		if (getPathVelocity() < 0.0) test = !test;
+		double result = (test /*reverse*/)? Math.sin(phi-tangent)/ell:
 		    (-Math.sin(phi-tangent)/ell);
 		if (RoadAnimation.level4 > -1) {
 		    trace(RoadAnimation.level4,
@@ -398,6 +415,9 @@ public class Car extends DirectedObject2D {
 					 boolean angleRelative,
 					 double time0)
     {
+	if (reverse && angleRelative) {
+	    angle += (angle <= 0.0)? Math.PI: -Math.PI;
+	}
 	super.setPathImplementation(path, u0, angle, angleRelative, time0);
 	savedPathAngleF = null;
 	savedPathAngleSF = null;
@@ -698,6 +718,7 @@ public class Car extends DirectedObject2D {
 	return leftDoorRate;
     }
 
+
     /**
      * Set the maximum door angle for the left door.
      * The value must be in the range [0.0, &pi;).
@@ -942,6 +963,48 @@ public class Car extends DirectedObject2D {
 	trace(RoadAnimation.level1, "driver position set to (%g, %g)",
 	      driverX, driverY );
 	setupBlindSpots();
+    }
+
+    /**
+     * Return the X coordinate of a driver's position in graph coordinate
+     * space.
+     * @return the X coordinate in graph coordinate space
+     */
+    public double getDriverXGCS() {
+	AffineTransform af = getAddToTransform();
+	double y2 =  width/2.0;
+	double y1 = - width/2.0;
+	double xr = - length/2.0;
+	double xf =  length/2.0;
+	double xws2 = xf - hoodLength;
+	double xws1 = xws2 - windshieldLength;
+	double dx = xws1 - driverX;
+	double dy = y2 - driverY;
+	double tmp[] = new double[4];
+	tmp[0] = dx; tmp[1] = dy;
+	af.transform(tmp, 0, tmp, 2, 1);
+	return tmp[2];
+    }
+
+    /**
+     * Return the Y coordinate of a driver's position in graph coordinate
+     * space.
+     * @return the Y coordinate in graph coordinate space
+     */
+    public double getDriverYGCS() {
+	AffineTransform af = getAddToTransform();
+	double y2 =  width/2.0;
+	double y1 = - width/2.0;
+	double xr = - length/2.0;
+	double xf =  length/2.0;
+	double xws2 = xf - hoodLength;
+	double xws1 = xws2 - windshieldLength;
+	double dx = xws1 - driverX;
+	double dy = y2 - driverY;
+	double tmp[] = new double[4];
+	tmp[0] = dx; tmp[1] = dy;
+	af.transform(tmp, 0, tmp, 2, 1);
+	return tmp[3];
     }
 
     /**

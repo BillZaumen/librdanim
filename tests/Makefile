@@ -61,6 +61,12 @@ cartest5: classes
 	$(JAVA) CarTest5
 	$(AVCONV) -r 25 -f image2 -i stmp/col-%03d.png -y -r 25 car5.webm
 
+cartest6: classes
+	$(JAVAC) CarTest6.java
+	$(JAVA) CarTest6
+	$(AVCONV) -r 25 -f image2 -i ttmp/col-%03d.png -y -r 25 car6.webm
+
+
 biketest: classes
 	$(JAVAC) BikeTest.java
 	$(JAVA) BikeTest

@@ -10,9 +10,9 @@ import javax.imageio.ImageIO;
 import java.util.Formatter;
 
 /**
- * Class representing a bicycle.
- * The bicycle's reference point is at the center of the bicycle's
- * bounding box.
+ * Class representing a bicycle.  The bicycle's reference point is at
+ * the location of the seat, which is at the center of the bicycle's
+ * bounding box for the default configuration.
  */
 public class Bicycle extends DirectedObject2D {
 
@@ -383,6 +383,23 @@ public class Bicycle extends DirectedObject2D {
 	return helmetAngle;
     }
 
+    /**
+     * Get the X coordinate of the seat in graph coordinate space.
+     * @return the X coordinate of the seat in graph coordinate space.
+     */
+    public double getSeatXGCS() {
+	AffineTransform af = getAddToTransform();
+	return af.getTranslateX();
+    }
+
+    /**
+     * Get the Y coordinate of the seat in graph coordinate space.
+     * @return the Y coordinate of the seat in graph coordinate space.
+     */
+    public double getSeatYGCS() {
+	AffineTransform af = getAddToTransform();
+	return af.getTranslateY();
+    }
 
     @Override
     public void addTo(Graph graph, Graphics2D g2d, Graphics2D g2dGcS) {
