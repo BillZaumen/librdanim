@@ -1,0 +1,79 @@
+scripting.importClasses("org.bzdev.anim2d", [
+    "Animation2D", "AnimationLayer2DFactory", "GraphViewFactory",
+    "AnimationPath2DFactory"]);
+
+scripting.importClass("org.bzdev.gio.ISWriterOps.AnimationParameters");
+
+scripting.importClass("org.bzdev.swing.AnimatedPanelGraphics");
+scripting.importClass("org.bzdev.swing.AnimatedPanelGraphics.Mode");
+scripting.importClass("org.bzdev.util.units.MKS");
+scripting.importClass("org.bzdev.lang.MathOps");
+
+scripting.importClass("org.bzdev.roadanim.Car");
+
+scripting.finishImport();
+###
+
+var out = scripting.getWriter();
+
+var frameWidth = asInt(1920/2);
+var frameHeight = asInt(1080/2);
+
+out.println(global.typeof(scripting));
+
+var a2d = new Animation2D(scripting, frameWidth, frameHeight,
+			  1000.0, asLong(40));
+
+var apg = AnimatedPanelGraphics.newFramedInstance(a2d,
+						  "Swerving",
+						  true, true, null);
+
+var width = MKS.feet(46.0);
+var scalef = 1.0*frameHeight/width;
+var length = frameWidth/scalef;
+a2d.setRanges(0.0, 0.0, 0.0, 0.5, scalef, scalef);
+out.println("scalef = " + scalef);
+
+a2d.createFactories("org.bzdev.anim2d", {
+    alf: "AnimationLayer2DFactory",
+    gvf: "GraphViewFactory",
+    pathf: "AnimationPath2DFactory"
+});
+
+a2d.createFactories("org.bzdev.roadanim", {
+    cf: "CarFactory",
+    bf: "BicycleFactory",
+    pf: "PedestrianFactory"
+});
+###
+
+var lightgray = {red: 200, blue: 200, green: 200, alpha: 255};
+var gray = {red: 64, blue: 64, green: 64, alpha: 255};
+var red = {red: 255, blue: 0, green: 0};
+var yellow = {blue: 0, red: 255, green: 255};
+
+var stroke = {width: 2.0, gcsMode: false};
+
+var car2 = cf.createObject("car2", [
+    {zorder: 2, visible: true},
+    {initialX: length*0.6, initialY: -MKS.feet(18)},
+    {refPointMode: "BY_NAME", refPointName: "LOWER_LEFT"},
+    {withPrefix: "color", config: red},
+    {withPrefix: "timeline", withIndex: [
+	{time: 2.0, rightDoorMode: true},
+	{time: 5.0, leftDoorMode: true}
+    ]}
+]);
+
+car2.printConfiguration();
+
+
+out.println("length = " + length);
+
+var maxframes = a2d.estimateFrameCount(12.0);
+a2d.initFrames(maxframes, apg);
+
+a2d.scheduleFrames(0, maxframes);
+
+a2d.run();
+apg.close();

@@ -10,7 +10,7 @@ import java.util.Map;
 import java.util.HashMap;
 
 /**
- * Abstract Factory for creating instances of Car.
+ * Abstract Factory for creating instances of {@link Car}.
  * <P>
  * The factory parameters this factory provides are the same as the parameters
  * provided by its subclass {@link CarFactory}:
