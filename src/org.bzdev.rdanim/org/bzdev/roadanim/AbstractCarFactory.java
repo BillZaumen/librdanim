@@ -148,9 +148,9 @@ public abstract class AbstractCarFactory <Obj extends Car>
 	@PrimitiveParm(value="driverOffsetX") Double driverX = null;
 	@PrimitiveParm(value="driverOffsetY") Double driverY = null;
 	@PrimitiveParm(value="leftBlindSpotLength", lowerBound="0.0")
-	Double leftBlindSpotLength = null;;
+	Double leftBlindSpotLength = null;
 	@PrimitiveParm(value="rightBlindSpotLength", lowerBound="0.0")
-	Double rightBlindSpotLength = null;;
+	Double rightBlindSpotLength = null;
 	@PrimitiveParm("leftBlindSpotVisible")
 	Boolean leftBlindSpotVisible = null;
 	@PrimitiveParm("rightBlindSpotVisible")
@@ -279,13 +279,13 @@ public abstract class AbstractCarFactory <Obj extends Car>
 			    obj.setLeftBlindSpotLength(leftBSL);
 			}
 			if (rightBSL != null) {
-			    obj.setLeftBlindSpotLength(rightBSL);
+			    obj.setRightBlindSpotLength(rightBSL);
 			}
 			if (leftBSVis != null) {
 			    obj.setLeftBlindSpotVisible(leftBSVis);
 			}
 			if (rightBSVis != null) {
-			    obj.setLeftBlindSpotVisible(rightBSVis);
+			    obj.setRightBlindSpotVisible(rightBSVis);
 			}
 			if (skidMode != null) {
 			    obj.setSkidMode(skidMode);

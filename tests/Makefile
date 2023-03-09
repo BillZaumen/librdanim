@@ -110,6 +110,14 @@ sctest-y: classes
 		 -d:tmpdir:tmp	anim2d,rdanim test.yaml
 	$(AVCONV) -r 25 -f image2 -i tmp/col-%03d.png -y -r 25 sctest.mp4
 
+sctest-ya: classes
+	mkdir -p tmp
+	(cd tmp; rm -f *.png)
+	yrunner --stackTrace  --codebase ../BUILD \
+		--add-modules org.bzdev.rdanim \
+		 -d:tmpdir:tmp	anim2d,rdanim testa.yaml
+	$(AVCONV) -r 25 -f image2 -i tmp/col-%03d.png -y -r 25 sctest.mp4
+
 sctest-y-dryrun: classes
 	mkdir -p tmp
 	(cd tmp; rm -f *.png)
