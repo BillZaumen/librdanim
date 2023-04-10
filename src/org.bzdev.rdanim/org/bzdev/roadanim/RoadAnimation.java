@@ -96,6 +96,7 @@ public class RoadAnimation {
      *        Angles, including the returned rate of change, are given
      *        in units of degrees per second.
      * </ul>
+     * @param <T> the enumeration used to define trace levels
      * @param level1 the trace level for slowly-varying parameters
      * @param level2 the trace level for bursty parameters
      * @param level3 the trace level for updates

@@ -1123,7 +1123,7 @@ public class Car extends DirectedObject2D {
     }
 
     /**
-     * Set the left blind-spot offset.
+     * Set the right blind-spot offset.
      * The center of the blind spot is located at an angle
      * &theta; = arctan (y/x) where y = width - driverY,
      * x = driverX + windshieldLength - offset, and  the
@@ -1135,14 +1135,14 @@ public class Car extends DirectedObject2D {
     }
 
     /**
-     * Get the left blind-spot offset.
+     * Get the right blind-spot offset.
      * The center of the blind spot is located at an angle
      * &theta; = arctan (y/x) where y = width - driverY,
      * x = driverX + windshieldLength - offset, and  the
      * angle is measured clockwise from the car's centerline.
      * @return the offest in units of meters
      */
-    public double getRightBlindSpotOffset(double offset) {
+    public double getRightBlindSpotOffset() {
 	return rightBlindSpotOffset;
     }
 

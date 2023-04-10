@@ -31,6 +31,11 @@ SYS_EXAMPLES = $(SYS_API_DOCDIR)/examples
 EXTDIR = $(SYS_BZDEVDIR)
 EXTLIBS = $(EXTDIR)
 
+JAVA_VERSION=11
+JAVADOC_LIBS = BUILD/librdanim.jar:$(EXTLIBS)
+JAVAC = javac --release $(JAVA_VERSION)
+JAVADOC = javadoc --release $(JAVA_VERSION) -Xdoclint:all,-html
+
 ALL = jarfile javadocs
 
 all: $(ALL)
@@ -130,7 +135,7 @@ $(JARFILE): $(FILES) $(TMPSRC) $(JROOT_JARDIR)/libbzdev-base.jar \
 	    META-INF/services/$(NOF_SERVICE)
 	mkdir -p mods/org.bzdev.rdanim
 	mkdir -p BUILD
-	javac -d mods/org.bzdev.rdanim -p $(EXTDIR) \
+	$(JAVAC) -d mods/org.bzdev.rdanim -p $(EXTDIR) \
 		--processor-module-path $(EXTDIR) -s tmpsrc/org.bzdev.rdanim \
 		$(RDANIM_MODINFO) $(RDANIM_JFILES) \
 		$(RDANIM_DIR)/$(BZDEV)/roadanim/lpack/DefaultClass.java \
@@ -155,8 +160,6 @@ javadocs: $(JROOT_JAVADOCS)/index.html
 
 altjavadocs: $(JROOT_ALT_JAVADOCS)/index.html
 
-JAVA_VERSION=11
-JAVADOC_LIBS = BUILD/librdanim.jar:$(EXTLIBS)
 
 LSNOF0= $(SYS_BZDEVDIR)/libbzdev-
 LSNOF1 = $(LSNOF0)base.jar:$(LSNOF0)math.jar:$(LSNOF0)obnaming.jar
@@ -172,7 +175,7 @@ $(JROOT_JAVADOCS)/index.html: $(RDANIM_JFILES) overview.html $(JARFILE)
 	rm -rf $(JROOT_JAVADOCS)/*
 	styleoption=`[ -z "$(DARKMODE)" ] && echo \
 		|| echo --main-stylesheet stylesheet.css`; \
-	javadoc -d $(JROOT_JAVADOCS) --module-path $(JAVADOC_LIBS) \
+	$(JAVADOC) -d $(JROOT_JAVADOCS) --module-path $(JAVADOC_LIBS) \
 		--module-source-path src:tmpsrc \
 		--add-modules org.bzdev.rdanim \
 		$$styleoption \
@@ -191,7 +194,7 @@ $(JROOT_ALT_JAVADOCS)/index.html: $(RDANIM_JFILES) overview.html $(JARFILE) \
 	rm -rf $(JROOT_ALT_JAVADOCS)/*
 	styleoption=`[ -z "$(DARKMODE)" ] && echo \
 		|| echo --main-stylesheet stylesheet.css`; \
-	javadoc -d $(JROOT_ALT_JAVADOCS) --module-path $(JAVADOC_LIBS) \
+	$(JAVADOC) -d $(JROOT_ALT_JAVADOCS) --module-path $(JAVADOC_LIBS) \
 		--module-source-path src:tmpsrc \
 		--add-modules org.bzdev.rdanim \
 		$$styleoption \
