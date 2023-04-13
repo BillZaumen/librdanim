@@ -36,6 +36,10 @@ JAVADOC_LIBS = BUILD/librdanim.jar:$(EXTLIBS)
 JAVAC = javac --release $(JAVA_VERSION)
 JAVADOC = javadoc --release $(JAVA_VERSION) -Xdoclint:all,-html
 
+JAVADOC_VERSION = $(shell javadoc --version | sed -e 's/javadoc //' \
+		| sed -e 's/[.].*//')
+
+
 ALL = jarfile javadocs
 
 all: $(ALL)
@@ -170,11 +174,12 @@ LSNOF3 = $(SYS_BZDEVDIR)/lsnof.jar
 # after the package is installed.
 LSNOF = java -p $(LSNOF1):$(LSNOF2):$(LSNOF3) -m org.bzdev.lsnof
 
-$(JROOT_JAVADOCS)/index.html: $(RDANIM_JFILES) overview.html $(JARFILE)
+$(JROOT_JAVADOCS)/index.html: $(RDANIM_JFILES) overview.html $(JARFILE) \
+		stylesheet$(JAVADOC_VERSION).css
 	mkdir -p $(JROOT_JAVADOCS)
 	rm -rf $(JROOT_JAVADOCS)/*
 	styleoption=`[ -z "$(DARKMODE)" ] && echo \
-		|| echo --main-stylesheet stylesheet.css`; \
+		|| echo --main-stylesheet stylesheet$(JAVADOC_VERSION).css`; \
 	$(JAVADOC) -d $(JROOT_JAVADOCS) --module-path $(JAVADOC_LIBS) \
 		--module-source-path src:tmpsrc \
 		--add-modules org.bzdev.rdanim \
@@ -183,6 +188,8 @@ $(JROOT_JAVADOCS)/index.html: $(RDANIM_JFILES) overview.html $(JARFILE)
 		-link file:///usr/share/doc/libbzdev-doc/api/ \
 		-overview overview.html -exclude $(JDOC_EXCLUDE) \
 		--module $(JDOC_MODULES)
+	cp stylesheet11.css $(JROOT_JAVADOCS)
+	cp stylesheet17.css $(JROOT_JAVADOCS)
 	$(LSNOF) $(DARKMODE)  -d $(JROOT_JAVADOCS) -p $(JARFILE) \
 	      --link file:///usr/share/doc/openjdk-$(JAVA_VERSION)-doc/api/ \
 	      --link file:///usr/share/doc/libbzdev-doc/api/ \
@@ -193,7 +200,7 @@ $(JROOT_ALT_JAVADOCS)/index.html: $(RDANIM_JFILES) overview.html $(JARFILE) \
 	mkdir -p $(JROOT_ALT_JAVADOCS)
 	rm -rf $(JROOT_ALT_JAVADOCS)/*
 	styleoption=`[ -z "$(DARKMODE)" ] && echo \
-		|| echo --main-stylesheet stylesheet.css`; \
+		|| echo --main-stylesheet stylesheet$(JAVADOC_VERSION).css`; \
 	$(JAVADOC) -d $(JROOT_ALT_JAVADOCS) --module-path $(JAVADOC_LIBS) \
 		--module-source-path src:tmpsrc \
 		--add-modules org.bzdev.rdanim \
@@ -205,6 +212,8 @@ $(JROOT_ALT_JAVADOCS)/index.html: $(RDANIM_JFILES) overview.html $(JARFILE) \
 		    file:///usr/share/doc/openjdk-$(JAVA_VERSION)-doc/api \
 		-overview overview.html \
 		--module $(JDOC_MODULES) -exclude $(JDOC_EXCLUDE)
+	cp stylesheet11.css $(JROOT_JAVADOCS)
+	cp stylesheet17.css $(JROOT_JAVADOCS)
 	lsnof -d $(JROOT_ALT_JAVADOCS) -p $(JARFILE) \
 	      --link-offline \
 	   https://docs.oracle.com/en/java/javase/$(JAVA_VERSION)/docs/api/ \
