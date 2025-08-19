@@ -1,0 +1,6 @@
+### module:org.bzdev.anim2d
+
+import (org.bzdev.roadanim, [
+    Car, CarFactory,
+    Pedestrian, PedestrianFactory,
+    Bicycle, BicycleFactory]);

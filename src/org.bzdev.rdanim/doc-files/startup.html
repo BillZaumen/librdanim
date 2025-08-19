@@ -1,0 +1,75 @@
+<!DOCTYPE HTML>
+<HTML lang="en">
+  <HEAD>
+    <META HTTP-EQUIV="content-type" content="text/html; charset=UTF-8">
+    <TITLE>Startup.esp Documentation</TITLE>
+    <link rel="stylesheet" type="text/css" href="{@docRoot}/stylesheet.css">
+    <link rel="stylesheet" type="text/css" href="{@docRoot}/description.css">
+  </HEAD>
+  <BODY>
+    <DIV style="margin-left: 2em">
+    <H1>Startup.esp Documentation</H1>
+    <P>
+      The resource META-INF/startup.esp can be loaded by
+      <STRONG>scrunner</STRONG> by adding the file name
+      <STRONG>module:org.bzdev.rdanim</STRONG> to
+      the <STRONG>scrunner</STRONG> command line.  This will import
+      classes from the <STRONG>org.bzdev.anim2d</STRONG> package as
+      as a couple of classes from <STRONG>org.bzdev.geom</STRONG> and
+      <STRONG>org.bzdev.swing</STRONG> as described in the
+      {@link org.bzdev.anim2d/ org.bzdev.anim2d module documentation}.
+      It will also import the classes
+      {@link org.bzdev.roadanim.Bicycle},
+      {@link org.bzdev.roadanim.BicycleFactory},
+      {@link org.bzdev.roadanim.Car},
+      {@link org.bzdev.roadanim.CarFactory},
+      {@link org.bzdev.roadanim.Pedestrian}, and
+      {@link org.bzdev.roadanim.PedestrianFactory}
+      from the package <STRONG>org.bzdev.roadanim</STRONG>.
+      Two functions from the {@link org.bzdev.anim2d/ org.bzdev.anim2d module}
+      module startup script
+      are also provided: <STRONG>createAnimation</STRONG> and
+      <STRONG>runAnimation</STRONG>.
+    <P>
+      For example,<BLOCKQUOTE><PRE><CODE>### module:org.bzdev.rdanim
+import (org.bzdev.util.units.MKS);
+var da ?= null;
+var a2d = createAnimation({
+    frameWidth: 800,
+    frameHeight: 600,
+    ticksPerSecond: 1000.0,
+    ticksPerFrame: 40,
+    imageSpaceDistance: 200,
+    gcsDistance: feet(12)
+  });
+
+a2d.createFactories({
+  bf: "BicycleFactory,
+  cf: "CarFactory"
+}).
+###
+...
+runAnimation(a2d, "Example", da, 30.0);
+</CODE></PRE></BLOCKQUOTE>
+  </DIV>
+  </BODY>
+</HTML>
+
+<!--  LocalWords:  scrunner AnimationLayer AnimationLayerFactory GCS
+ -->
+<!--  LocalWords:  AnimationPath DFactory ConnectingLine GraphView xf
+ -->
+<!--  LocalWords:  GraphviewFactory Graphview ZoomMode KinematicOps
+ -->
+<!--  LocalWords:  PlacedAnimationObject PlacedObject dFactory xgcs
+ -->
+<!--  LocalWords:  RefPointMode BasicSplinePath MathOps CarFactory yf
+ -->
+<!--  LocalWords:  BicycleFactory PedestrianFactory createAnimation
+ -->
+<!--  LocalWords:  AnimatedPanelGraphics frameWidth frameHeight ygcs
+ -->
+<!--  LocalWords:  ticksPerSecond ticksPerFrame imageSpaceDistance da
+ -->
+<!--  LocalWords:  gcsDistance runAnimation accessor ffmpeg
+ -->
