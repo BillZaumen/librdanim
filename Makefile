@@ -129,14 +129,16 @@ RDANIM_RESOURCES = $(subst ./src/,,$(RDANIM_RESOURCES1))
 JDOC_MODULES = org.bzdev.rdanim
 JDOC_EXCLUDE = org.bzdev.roadanim.lpack:org.bzdev.roadanim.provider
 
-FILES = $(RDANIM_JFILES) $(RDANIM_RESOURCES1) $(RDANIM_MODINFO)
+FILES = $(RDANIM_JFILES) $(RDANIM_RESOURCES1) $(RDANIM_MODINFO) \
+	src/org.bzdev.rdanim/doc-files/startup.html
 
 $(JARFILE): $(FILES) $(TMPSRC) $(JROOT_JARDIR)/libbzdev-base.jar \
 	    $(JROOT_JARDIR)/libbzdev-obnaming.jar \
 	    $(JROOT_JARDIR)/libbzdev-graphics.jar \
 	    $(JROOT_JARDIR)/libbzdev-devqsim.jar \
 	    $(JROOT_JARDIR)/libbzdev-anim2d.jar \
-	    META-INF/services/$(NOF_SERVICE)
+	    META-INF/services/$(NOF_SERVICE) \
+	    META-INF/startup.esp
 	mkdir -p mods/org.bzdev.rdanim
 	mkdir -p BUILD
 	$(JAVAC) -d mods/org.bzdev.rdanim -p $(EXTDIR) \
@@ -148,6 +150,7 @@ $(JARFILE): $(FILES) $(TMPSRC) $(JROOT_JARDIR)/libbzdev-base.jar \
 		cp src/$$i mods/$$i ; done
 	mkdir -p mods/org.bzdev.rdanim/META-INF/services
 	cp META-INF/services/* mods/org.bzdev.rdanim/META-INF/services
+	cp META-INF/startup.esp mods/org.bzdev.rdanim/META-INF/startup.esp
 	jar --create --file $(JARFILE) --manifest=$(RDANIM_DIR)/manifest.mf \
 		copyright -C mods/org.bzdev.rdanim .
 

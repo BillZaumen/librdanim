@@ -40,6 +40,11 @@ public class FactoryTest {
 	cf.set("timeline.time", 1, 1.5);
 	cf.set("timeline.driverOffsetY", 1, 0.2);
 	cf.set("timeline.leftBlindSpotLength", 1, 10.0);
+	cf.set("timeline.rightBlindSpotVisible", 1, true);
+
+	cf.set("timeline.time", 2, 2.0);
+	cf.set("timeline.rightBlindSpotLength", 2, 10.0);
+
 
 	bf.createObject("bike");
 	cf.createObject("car");
@@ -50,7 +55,7 @@ public class FactoryTest {
 	    file.delete();
 	}
 
-	int maxFrames = animation.estimateFrameCount(2.0);
+	int maxFrames = animation.estimateFrameCount(3.0);
 	animation.initFrames(maxFrames, "ftmp/col-", "png");
 	animation.scheduleFrames(0, maxFrames);
 	animation.run();

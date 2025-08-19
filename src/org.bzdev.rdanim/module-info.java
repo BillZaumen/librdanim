@@ -6,6 +6,9 @@
  * a few classes that represent objects one might find on a road so
  * that one can produce animations showing the interaction of
  * motor vehicles, bicycles, and pedestrians.
+ * There is an
+ * <A HREF="doc-files/startup.html">ESP startup script</A> that
+ *  scrunner can load.
  */
 module org.bzdev.rdanim {
     exports org.bzdev.roadanim;

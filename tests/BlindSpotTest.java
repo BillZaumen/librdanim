@@ -48,6 +48,7 @@ public class BlindSpotTest {
 
 	animation.scheduleCall(new Callable() {
 		public void call() {
+		    car.setRightBlindSpotLength(10.0);
 		    car.setDriverPosition(0.3, 0.4);
 		}
 	    }, animation.getTicks(3.0));
