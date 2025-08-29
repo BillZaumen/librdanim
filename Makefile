@@ -130,7 +130,8 @@ JDOC_MODULES = org.bzdev.rdanim
 JDOC_EXCLUDE = org.bzdev.roadanim.lpack:org.bzdev.roadanim.provider
 
 FILES = $(RDANIM_JFILES) $(RDANIM_RESOURCES1) $(RDANIM_MODINFO) \
-	src/org.bzdev.rdanim/doc-files/startup.html
+	src/org.bzdev.rdanim/doc-files/startup.html \
+	src/org.bzdev.rdanim/doc-files/howto.html
 
 $(JARFILE): $(FILES) $(TMPSRC) $(JROOT_JARDIR)/libbzdev-base.jar \
 	    $(JROOT_JARDIR)/libbzdev-obnaming.jar \
@@ -184,8 +185,9 @@ $(JROOT_JAVADOCS)/index.html: $(RDANIM_JFILES) overview.html $(JARFILE) \
 	styleoption=`[ -z "$(DARKMODE)" ] && echo \
 		|| echo --main-stylesheet stylesheet$(JAVADOC_VERSION).css`; \
 	$(JAVADOC) -d $(JROOT_JAVADOCS) --module-path $(JAVADOC_LIBS) \
+		--allow-script-in-comments \
 		--module-source-path src:tmpsrc \
-		--add-modules org.bzdev.rdanim \
+		--add-modules org.bzdev.rdanim,org.bzdev.desktop \
 		$$styleoption \
 		-link file:///usr/share/doc/openjdk-$(JAVA_VERSION)-doc/api \
 		-link file:///usr/share/doc/libbzdev-doc/api/ \
@@ -205,8 +207,9 @@ $(JROOT_ALT_JAVADOCS)/index.html: $(RDANIM_JFILES) overview.html $(JARFILE) \
 	styleoption=`[ -z "$(DARKMODE)" ] && echo \
 		|| echo --main-stylesheet stylesheet$(JAVADOC_VERSION).css`; \
 	$(JAVADOC) -d $(JROOT_ALT_JAVADOCS) --module-path $(JAVADOC_LIBS) \
+		--allow-script-in-comments \
 		--module-source-path src:tmpsrc \
-		--add-modules org.bzdev.rdanim \
+		--add-modules org.bzdev.rdanim,org.bzdev.desktop \
 		$$styleoption \
 		-linkoffline ../../../bzdev/doc/api \
 			file:///usr/share/doc/libbzdev-doc/api/ \

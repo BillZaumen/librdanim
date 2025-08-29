@@ -1,0 +1,945 @@
+<!DOCTYPE HTML>
+<HTML lang="en">
+  <HEAD>
+    <META HTTP-EQUIV="content-type" content="text/html; charset=UTF-8">
+    <TITLE>Road Animation Documentation</TITLE>
+    <link rel="stylesheet" type="text/css" href="{@docRoot}/stylesheet.css">
+    <SCRIPT type="text/javascript">
+      function fixESPLink() {
+	  console.log("calling fixESPLink");
+	  var link = document.getElementById("ESP").firstElementChild;
+	  var initialURL = link.getAttribute("HREF");
+	  console.log("saw %s", initialURL);
+	  link.setAttribute("HREF", initialURL
+			    .replace("module-summary.html",
+				     "org/bzdev/util/doc-files/esp.html"));
+	  console.log("link changed to %s", link.getAttribute("HREF"));
+      }
+    </SCRIPT>
+  </HEAD>
+  <BODY>
+    <DIV style="margin-left: 2em">
+      <H1>Road Animation Usage Guide</H1>
+      <P>
+	The <CODE>org.bzdev.rdanim</CODE> module provides Java classes
+	representing cars, bicycles, and pedestrians.  For each of these
+	there is a corresponding "factory" class used the create and
+	configure these objects.
+      <P>
+	The Java package <CODE>org.bzdev.roadanim</CODE> is provided by the
+	Java module <CODE>org.bzdev.rdanim</CODE> and is dependent on the
+	Java module <CODE>org.bzdev</CODE>, which has its own dependencies.
+	Two programs simplify the use of <CODE>org.bzdev.roadanim</CODE>:
+	<UL>
+	  <LI><STRONG>scrunner</STRONG>. This is a script interpreter
+	    that supports the ESP (Expression Sequence Parser) scripting
+	    language.
+	  <LI><STRONG>epts</STRONG>. This is a graphics editor. that can
+	    provide paths represented by ESP script files.
+	</UL>
+	
+	
+	<H2>Installation</H2>
+      <P>
+	For Debian Linux systems, first install Java (e.g. openjdk-11 or
+	later). Then follow the instructions on the
+	<A HREF="https://billzaumen.github.io/bzdev/">
+	  BZDEV Debian Repository</A> page to configure apt to use this
+	repository. That page describes a one-liner that handles
+	the full setup:
+	<BLOCKQUOTE><PRE><CODE>
+curl https://billzaumen.github.io/bzdev/setup.sh | sh
+	</CODE></PRE></BLOCKQUOTE>
+	but you might feel more comfortable doing each step manually as
+	this command will install an additional Debian repository.
+      <P>
+	Then run
+	<BLOCKQUOTE><PRE><CODE>
+apt-get -y install libbzdev-java
+apt-get -y install libbzdev-util
+apt-get -y install libbzdev-misc
+apt-get -y install librdanim-java
+apt-get -y install epts
+	</CODE></PRE></BLOCKQUOTE>
+	Installing  libbzdev-java should install a series of similarly
+	name packages as well.	Also run either
+	<BLOCKQUOTE><PRE><CODE>
+apt-get install libbzdev-darkmode-doc
+apt-get install librdanim-darkmode-doc
+	</CODE></PRE></BLOCKQUOTE>
+	or
+	<BLOCKQUOTE><PRE><CODE>
+apt-get install libbzdev-doc
+apt-get install librdanim-doc
+	</CODE></PRE></BLOCKQUOTE>
+	depending on whether you prefer dark mode or light mode for
+	your user-interface.  If running Pop!_OS, run
+	<BLOCKQUOTE><PRE><CODE>
+apt-get install librdanim-pop-icons
+apt-get install epts-pop-icons
+	</CODE></PRE></BLOCKQUOTE>
+
+	For other systems, there are java programs that provide
+	installers. Just run
+	<BLOCKQUOTE><PRE><CODE>
+java -jar INSTALLER	      
+	</CODE></PRE></BLOCKQUOTE>
+	where INSTALLER is a JAR file that can be
+	downloaded from
+	<A HREF="https://billzaumen.github.io/bzdev/installers.html">
+	  https://billzaumen.github.io/bzdev/installers.html</A>
+	The ones needed are
+	<UL>
+	  <LI><STRONG>bzdev</STRONG>.
+	  <LI><STRONG>epts</STRONG>.
+	  <LI><STRONG>roadanim</STRONG>.
+	</UL>
+	and you should use the same program options for each case.
+	After downloading the jar files, you can compute their
+	SHA-256 message digest and compare it to the one listed on
+	the web page to verify that the JAR file was downloaded correctly.
+
+	<H2>The ESP Scripting language</H2>
+
+	ESP (Expression Sequence Parser) is a minimalist scripting
+	language based on ECMAScript (JavaScript), with most of the keywords
+	eliminated, and with a few additional operators and directives.
+	The API documentation for {@link org.bzdev.base/} contains
+	<SPAN id="ESP">
+	{@link org.bzdev.base/ a detailed description of ESP}.</SPAN>
+      <P>
+	ESP&apos;s primary use is in configuring some application, where a
+	script is run to set up an application and them mostly gets out of
+	the way.  If you have already learned ECMAScript, or similar
+	scripting languages, you can easily read ESP code given a short
+	explanation of differences (mostly additional operators):
+	<UL>
+	  <LI> the <STRONG>?=</Strong> operator is a conditional assignment
+	    operator and should be preceded by <STRONG>var</STRONG> and then
+	    a variable name. The value following this operator will be
+	    assigned to the variable if the variable does not exist.
+	  <LI> the <STRONG>??=</Strong> operator is a conditional assignment
+	    operator and should be preceded by <STRONG>var</STRONG> and then
+	    a variable name. The value following this operator will be
+	    assigned to the variable if the variable does not exist or is
+	    <STRONG>null</STRONG>.
+	  <LI> the <STRONG>`</Strong> operator must be followed by an
+	    opening brace, and will be turned into <CODE>function()</CODE>,
+	    with <CODE>(),</CODE> added immediately following a closing brace.
+	    In addition, if <STRONG>`</STRONG> is preceded by a binary
+	    logical operator (<STRONG>&amp;&amp;</STRONG> or
+	    <STRONG>||</STRONG>), the function created will always return
+	    <STRONG>true</STRONG> (unless an exception is thrown). Thus,
+	    <CODE>(x == 10) &amp;&amp; `{x = 20}</CODE> is equivalent to the
+	    ECMAScript statement <CODE>if (x == 10) {x = 20;}</CODE>
+	  <LI> the <STRONG>&lt;=&gt;</Strong> operator swaps two variables.
+	    <CODE>x &lt;=&gt; y</CODE> is equivalent to
+	    <BLOCKQUOTE><PRE><CODE>
+		  var tmp = x;
+		  x = y;
+		  y = x
+	    </CODE></PRE></BLOCKQUOTE>
+	  <LI> the <STRONG>%%</Strong> operator is equivalent to 'mod'
+	    in mathematics: <CODE>x %% n</CODE> has the value
+	    x mod n.  It differs from the <CODE>%</CODE> operator in that
+	    the value is always in the range [0, n). For example, the
+	    value of <CODE>1 %% 10</CODE> is 1 and the value of
+	    <CODE>(-1) %% 10</CODE> is 9 so that
+	    <CODE>((1 %% 10) + ((-1) %% 10)) %% 10</CODE> is 0.
+	  <LI> the <STRONG>::</Strong> operator has two uses. If a
+	    class name is followed by "::null", the value is null but
+	    cast to that class. Otherwise it is used for method references
+	    (the same as in Java).
+	  <LI> the <STRONG>new</Strong> operator is used only to create
+	    Java classes.
+	  <LI> when <STRONG>var</STRONG> is followed by <STRONG>.</STRONG>
+	    and then a variable name, the value is true if the variable
+	    exists and false if it does not.
+	  <LI> the <STRONG>import</Strong> statement starts with the
+	    keyword <STRONG>import</STRONG>, which is followed by one or
+	    two arguments delimited by parentheses.  For the single argument
+	    case, the argument is a fully qualified class name, optionally
+	    double quoted.  For the two-argument case, the first argument
+	    is a fully qualified Java package name, and the second argument
+	    is a list (delimited by square brackets) each element of which
+	    is a class name.  All these names can be quoted if desired.
+	    ESP is a bit fussy about import statements: if it recognizes a
+	    class name, that name must be explicitly imported.
+	  <LI> the <STRONG>throw</STRONG> operator is a unary operator whose
+	    single argument is a string or an expression that evaluates to
+	    a string. The scrunner will print the message and indicate the
+	    line in the script were it occurred.
+	</UL>
+
+      <P>
+	<UL>
+	  <LI> The ECMAScript reserved words that are used are
+	    <STRONG>false</STRONG>
+	    <STRONG>function</STRONG>, <STRONG>import</STRONG>,
+	    <STRONG>instanceof</STRONG>, <STRONG>new</STRONG>,
+	    <STRONG>null</STRONG>, <STRONG>throw</STRONG>,
+	    <STRONG>this</STRONG>,
+	    <STRONG>true</STRONG>, <STRONG>var</Strong>, and
+	    <STRONG>void</STRONG>.
+	</UL>
+	There are no <CODE>if</CODE>, <CODE>for</CODE>, <CODE>return</CODE>,
+	<CODE>switch</CODE>, or <CODE>while</CODE> statements.  Blocks
+	of code are replaced with lambda expressions (calls to
+	anonymous functions).  Instead of a statement such as
+	<BLOCKQUOTE><PRE><CODE>
+if (x &gt; 0) {
+    x = 10;
+}
+	</CODE></PRE></BLOCKQUOTE>
+	one can use
+	<BLOCKQUOTE><PRE><CODE>
+(x &gt; 0) &amp;&amp; function() {x = 10; true}(); 
+	</CODE></PRE></BLOCKQUOTE>
+	which can be shorted to
+	<BLOCKQUOTE><PRE><CODE>
+(x &gt; 0) &amp;&amp; `{x = 10};
+	</CODE></PRE></BLOCKQUOTE>
+	A <CODE>return</CODE>statement is not needed because a function
+	always returns the value of its last expression unless an
+	exception is thrown.
+      <P>
+	For animations, conditional statements are rarely needed. ESP
+	objects are little more than hash tables. While ESP objects
+	can have methods, these are typically not needed for animations.
+	Similarly, ESP arrays are basically Java array lists, but can
+	be indexed by enclosing the index in square brackets. For
+	example,
+	<BLOCKQUOTE><PRE><CODE>
+var list = [1, 2, 3];
+list[1] = 20;
+global.getWriter().format("[%d, %d, %d]\n", list[0], list[1], list[2]);
+	</CODE></PRE></BLOCKQUOTE>
+	will print <CODE>[1, 20, 3]</CODE>.
+	A similar syntax can be used for objects:
+	<BLOCKQUOTE><PRE><CODE>
+var obj = {a: 1, b: 2, c: 3};
+obj["b"] = 20;
+global.getWriter().format("{a: %d, b: %d, c: %d}\n",
+			  obj["a"], obj["b"], obj["c"]);
+	</CODE></PRE></BLOCKQUOTE>
+	will print <CODE>{a: 1, b: 20, c: 3}</CODE>.
+      <P>
+	While ESP does not contain iteration facilities explicitly, it
+	does allow one to use Java streams.  In some cases, this can
+	execute very fast:
+	<BLOCKQUOTE><PRE><CODE>
+import (java.lang.Math);
+import (org.bzdev.lang.MathOps);
+import (org.bzdev.math, [Adder, Adder.Kahan]);
+
+var adder = new Adder.Kahan();
+
+LongStream.rangeClosed(1, 1000000)
+    .mapToDouble(MathOps::asDouble)
+    .forEach(adder::add);
+
+global.getWriter().println("sum = " + round(adder.getSum()));
+	</CODE></PRE></BLOCKQUOTE>
+	will perform the sum using Java directly.
+      <P>
+	ESP can be used to write simple programs For example, the following will
+	compute the circumference of an ellipse:
+	<BLOCKQUOTE><PRE><CODE>
+#!/usr/bin/scrunner -sD:a,D:b,ENPU:true
+import java.lang.Math;
+import org.bzdev.math.Functions;
+a &lt; b &amp;&amp; a &lt;=&gt; b;
+4.0 * a * eE(sqrt(1.0 - (b*b)/(a*a)));
+	</CODE></PRE></BLOCKQUOTE>
+	The function <CODE>eE</CODE>, defined as a static method of
+	the class <CODE>org.bzdev.math.Functions</CODE>, computes the
+	Legendre form of an elliptic integral of the second kind.
+	The <CODE>-s</CODE>option in the first line indicates that,
+	when run as a script, <CODE>a</CODE> is the first command-line
+	argument and its value must be a double, <CODE>b</CODE> is the
+	second command-line argument and its value must be a double,
+	and that
+	<UL>
+	  <LI>the program will exit immediately after the script is
+	    run instead of waiting for threads to exit.
+	  <LI> there are no additional command-line arguments.
+	  <LI> the list line in the script will be printed.
+	  <LI> the variable 'scripting' is not defined. While fine in
+	    this case, the animation software, particular when factories
+	    are used, needs this variable.
+	</UL>
+
+	<H2>Using EPTS</H2>
+      <P>
+	First create a directory for the animation, with two
+	subdirectories:
+	<CODE>images</CODE> and <CODE>tmp</CODE>. The directory
+	<CODE>images</CODE> will contain images (typically PANG or JPEG)
+	that can be used to create a background for an animation.
+	If the background image is background.pang, then one should run
+	the command
+	<BLOCKQUOTE><PRE><CODE>
+	      epts images/background.png
+	</CODE></PRE></BLOCKQUOTE>
+	This command will open a graphics editor that can be used to draw
+	paths, measure distances, etc. The first step will usually be to
+	measure the length of some feature in image coordinates (basically
+	1/72 inches, the size of a pixel on a screen). There is a keyboard
+	shortcut, ALT+I corresponding to the Measure Distance menu's
+	Image-Space Distance menu item.  This will change the cursor to a
+	crosshair.  When right-clicked once (alternatively one can press
+	the  ENTER key), the current mouse position will be used as a
+	starting point. Moving the mouse and again right-clicking or pressing
+	the ENTER key will select a second point":
+      <P>
+	<CENTER>
+	  <IMG SRC="idist.png" WIDTH=746 HEIGHT=707
+	       ALT="Measuring distances with EPTS">
+	</CENTER>
+      <P>
+	At this point, the distance between the two points will be displayed
+	and copied to the clipboard.
+	The next step is to use the file menu's Configure GCS menu item:
+      <P>
+	<CENTER>
+	  <IMG SRC="config.png" WIDTH=741 HEIGHT=702
+	       ALT="Configuring GCS using EPTS">
+	</CENTER>
+      <P>
+	The distance just copied to the clipboard can be pasted into
+	the User-Space Distance field and the corresponding distance in
+	GCS units can be entered.  These will be accepted once the OK button
+	is pressed.
+      <P>
+	At this point, a path can be created.  The following example shows
+	the dialog box when the Tools menu's Create a B&eacute;zier Path
+	menu item is selected (the keyboard shortcut is ALT-B). 
+      <P>
+	<CENTER>
+	  <IMG SRC="createPath.png" WIDTH=741 HEIGHT=702
+	       ALT="Creating a path using EPTS">
+	</CENTER>
+      <P>
+	The name of the path was entered. This should be a variable name
+	following the same conventions as Java and similar languages.
+	After the OK button is pressed, one can select points along the
+	path. The points can be
+	<UL>
+	  <LI> An initial MOVE_TO point.
+	  <LI> A SEG_END point. These start and terminate splines, Cubic
+	    B&eacute;zier arcs, and straight-line segments.
+	  <LI> A SPLINE point. These are the 'knot' points of a spline,
+	    excluding the spline's end points.
+	  <LI> an intermediate CONTROL point. These are the intermediate
+	    control points (at most 2 in a row) for cubic B&eacute;zier arcs.
+	    They can also be added before and after the SEG_END points that
+	    terminate a spline, in which case only a single point of this
+	    type is allowed at an end of the spline.
+	</UL>
+	As the path is extended, the path the splines follow will be
+	updated.  The path is terminated by typing Z (for an open path)
+	or L (for a closed path), with corresponding menu items in the
+	Tools menu also provided. Such a path is shown in the following
+	figure:
+      <P>
+	<CENTER>
+	  <IMG SRC="paths.png" WIDTH=633 HEIGHT=474
+	       ALT="A path that was created with EPTS">
+	</CENTER>
+      <P>
+      <P>
+	After the EPTS session is saved (e.g., in the file example.epts),
+	one can use the File menu's Create Template menu item to open
+	a dialog box as shown in the following figure:
+      <P>
+	<CENTER>
+	  <IMG SRC="template1.png" WIDTH=747 HEIGHT=612
+	       ALT="EPTS template editor showing its startup tab">
+	</CENTER>
+      <P>
+	One should select Table Template as the template type and choose
+	a template that will provide ESP/ECMAScript compatible output. The
+	Choose button next to the Template File or URL text field will
+	show English-language descriptions of these templates. One should
+	then press the Accept Template Options button.  Once that is done,
+	one can go the Configure tab, select a path, pick a path color,
+	and indicate if that path should be drawn.  One will want to draw
+	paths during debugging, and turn drawing off when done by unselected
+	the Draw Color check box:
+      <P>
+	<CENTER>
+	  <IMG SRC="template2.png" WIDTH=723 HEIGHT=596
+	       ALT="EPTS template editor showing path configurations">
+	</CENTER>
+      <P>
+	The X-order was set to 10 to make sure the path would be drawn after
+	other items such as a background image.
+      <P>
+	Finally, one should select the Output tab and enter an output file
+	name.  In the following example, the Output File is paths.esp in
+	order to create the correct extension for this script.
+      <P>
+	<CENTER>
+	  <IMG SRC="template3.png" WIDTH=751 HEIGHT=595
+	       ALT="ETPS template editor showing options to save
+                    and generate files">
+	</CENTER>
+      <P>
+	One should then save the file with a name such as example.eptt
+	and click Generate Output and Exit
+	to terminate the program and create the output file paths.eps.
+	Once the files example.epts and example.eptt are set up, the
+	output file paths.eps can be created programmatically by
+	entering the command
+	<BLOCKQUOTE><PRE><CODE>
+	      epts -o paths.esp example.eptt
+	</CODE></PRE></BLOCKQUOTE>
+	This command should be run if either example.epts or example.eptt
+	are modified. The file paths.esp contains specifications for paths,
+	not actual paths. A typical specification is
+	<BLOCKQUOTE><PRE><CODE>
+var refpoint = {x: 25.731216000000003, y: 1.5361920000000002};
+
+var bikepath = [{visible: "true",
+	      windingRule: "WIND_EVEN_ODD",
+	      "stroke.gcsMode": false,
+	      "color.css": "rgb(65,105,225)",
+	      "stroke.cap": "BUTT",
+	      "stroke.dashIncrement": 10.0,
+	      "stroke.dashPhase": 0.0,
+	      "stroke.dashPattern": "-",
+	      "stroke.join": "BEVEL",
+	      "stroke.miterLimit": 10.0,
+	      "stroke.width": 1.0,
+	      zorder: 10},
+	{withPrefix: "cpoint", withIndex: [
+	      {type: "MOVE_TO", x: 12.61872, y: 6.894576},
+	      {type: "SPLINE", x: 17.209008, y: 6.803136},
+	      {type: "SPLINE", x: 18.708624, y: 6.455664},
+	      {type: "SPLINE", x: 19.440144, y: 6.181344},
+	      {type: "SPLINE", x: 20.702016, y: 5.907024},
+	      {type: "SEG_END", x: 23.50008, y: 5.815584}
+	      ]}];
+	</CODE></PRE></BLOCKQUOTE>
+	and there will be a single variable
+	definition for each path. These specifications are processed
+	by <EM>factories</EM> that have a large number of 2 and 3
+	argument methods named "set" and "add" that are used to
+	configure the factory once configured, the factory can create an
+	animation object.  A factory method named "createObject" with
+	two arguments&mdash;the name of object (animation objects have
+	unique names in a given animation) and the specification&mdash;can
+	be used to create objects for an animation. In this case, the
+	specification is parsed to generate a series of "set" or "add"
+	methods.
+      <P>
+	When a specification is processed, each property name
+	in an object is turned into an attribute name, possibly 
+	with a prefix added to it, and the value of the property becomes
+	an attribute value.  Thus {visible: "true"} is treated as
+	set("visible", "true").
+      <P>
+	A few property names are reserved and treated specially:
+	<UL>
+	  <LI> <STRONG>withKey</STRONG>&mdash;the value is the name of
+            a set/add key.  In this case, the key is used by the current
+            object and any nested objects (objects indicated by a
+            "config" attribute).  A <STRONG>withIndex</STRONG> attribute
+            is not allowed. For example,
+	    <CODE>{withKey: 1, foo: "bar"}</CODE> is turned into
+	    <CODE>set("foo", 1, "bar")</CODE>.
+	  <LI> <STRONG>withIndex</STRONG>&mdash;The value of this parameter
+            is a JavaScript array. The attribute <STRONG>withKey</STRONG>
+	    is not allowed.
+	  <LI> <STRONG>withPrefix</STRONG>&mdash;a prefix is defined. For
+	    the current object, the value of <STRONG>config</STRONG>, or
+	    each element of the value of <STRONG>withIndex</STRONG>,
+	    each non-reserved attribute name <EM>NAME</EM> is replaced
+	    with <EM>PREFIX</EM>.<EM>NAME</EM>, where <EM>PREFIX</EM> is
+	    the value of the "prefix" attribute.  If
+	    other <EM>withPrefix</EM> attributes are available due to
+	    nesting, all of them are concatenated (outer first), with a
+	    period separating them.
+	  <LI> <STRONG>config</STRONG>&mdash;this indicates that a nested
+            object or array of objects should be used as well. Nested
+            objects inherit <STRONG>withKey</STRONG> and
+	    <STRONG>withPrefix</STRONG> attributes.
+	</UL>
+      <P>
+	The result is that an object such as
+	<BLOCKQUOTE><PRE><CODE>
+{withPrefix: "cpointw", withIndex: [
+     {type: "MOVE_TO", x: 834.0, y: 380.0},
+     {type: "SPLINE", x: 941.0, y: 372.0},
+     {type: "SPLINE", x: 1007.0, y: 356.0},
+     {type: "SPLINE", x: 1063.0, y: 338.0},
+     {type: "SPLINE", x: 1132.0, y: 323.0},
+     {type: "SEG_END", x: 1223.0, y: 319.0}
+]}
+	</CODE></PRE></BLOCKQUOTE>
+	is turned into
+	<BLOCKQUOTE><PRE><CODE>
+[
+     {cpoint.type: "MOVE_TO", cpoint.x: 834.0, cpoint.y: 380.0, withIndex 0},
+     {cpoint.type: "SPLINE", cpoint.x: 941.0, cpoint.y: 372.0, withIndex 1},
+     {cpoint.type: "SPLINE", cpoint.x: 1007.0, cpoint.y: 356.0, withIndex 2},
+     {cpoint.type: "SPLINE", cpoint.x: 1063.0, cpoint.y: 338.0, withIndex 3},
+     {cpoint.type: "SPLINE", cpoint.x: 1132.0, cpoint.y: 323.0, withIndex 4},
+     {cpoint.type: "SEG_END", cpoint.x: 1223.0, cpoint.y: 319.0, withIndex 5}
+]
+	</CODE></PRE></BLOCKQUOTE>
+	which in turn becomes a sequence of method calls:
+	<BLOCKQUOTE><PRE><CODE>
+factory.set("cpoint.type", 0, "MOVE_TO");
+factory.set("cpoint.x", 0, 834.0);
+factory.set("cpoint.y": 0, 380.0);
+factory.set("cpoint.type", 1, "SPLINE");
+...
+factory.set("cpoint.y", 5, 319.0);
+	</CODE></PRE></BLOCKQUOTE>
+	Once the factory is configured, an object can be created.
+	
+	<H2>Running scripts</H2>
+      <P>
+	Scripts can be run using the program <CODE>scrunner</CODE>.
+	<BLOCKQUOTE><PRE><CODE>
+scrunner --resourcePath images paths.esp video.esp
+	</CODE></PRE></BLOCKQUOTE>
+	The <CODE>--resourcePath</CODE> option indicates that
+	the URL <CODE>resource:background.png</CODE> points to the
+	file images/background.png. This command will process the
+	scripts <CODE>paths.esp</CODE> and <CODE>video.esp</CODE>
+	in that order.
+	<BLOCKQUOTE><PRE><CODE>
+	      scrunner --resourcePath images -d:da:tmp  paths.esp video.esp
+	</CODE></PRE></BLOCKQUOTE>
+	The argument <CODE>-d:da:tmp</CODE> results in a
+	scripting-language variable named <CODE>da</CODE> being bound to
+	an instance of the Java class DirectoryAccessor that represents
+	a directory, <CODE>tmp</CODE> in this case, without providing
+	unconstrained access to a computer's file system.  As before,
+	the <CODE>--resourcePath</CODE> option indicates that the
+	URL <CODE>resource:background.png</CODE> points to the file
+	images/background.png. This command will also process the
+	scripts <CODE>paths.esp</CODE> and
+	<CODE>video.esp</CODE> in that order.
+	
+	<H2>Animation Scripts</H2>
+      <P>
+	The script <CODE>video.esp</CODE> is the one that will be
+	created manually. For convenience, such scripts will
+	start with the line
+	<BLOCKQUOTE><PRE><CODE>
+### module:org.bzdev.rdanim
+	</CODE></PRE></BLOCKQUOTE>
+	which will look up a "startup" script defined in the Java
+	module <CODE>org.bzdev.rdanim</CODE>. This will define two
+	functions: <CODE>createAnimation</CODE> and
+	<CODE>runAnimation</CODE>.  It will also import a series
+	of Java classes: 
+	{@link org.bzdev.anim2d.Animation2D Animation2D},
+	{@link org.bzdev.anim2d.AnimationLayer2D AnimationLayer2D},
+	{@link org.bzdev.anim2d.AnimationLayer2DFactory AnimationLayer2DFactory},
+	{@link org.bzdev.anim2d.AnimationLayer2D.Type AnimationLayer2D.Type},
+	{@link org.bzdev.anim2d.AnimationPath2D AnimationPath2D},
+	{@link org.bzdev.anim2d.AnimationPath2DFactory AnimationPath2DFactory},
+	{@link org.bzdev.anim2d.ConnectingLine2D ConnectingLine2D},
+	{@link org.bzdev.anim2d.ConnectingLine2DFactory ConnectingLine2DFactory},
+	{@link org.bzdev.anim2d.GraphView GraphView},
+	{@link org.bzdev.anim2d.GraphViewFactory GraphViewFactory},
+	{@link org.bzdev.anim2d.GraphView.ZoomMode GraphView.ZoomMode},
+	{@link org.bzdev.anim2d.KinematicOps2D KinematicOps2D},
+	{@link org.bzdev.anim2d.PlacedAnimationObject2D PlacedAnimationObject2D},
+	{@link org.bzdev.anim2d.PlacedObject2DFactory  PlacedObject2DFactory},
+	{@link org.bzdev.anim2d.PlacedObject2DFactory.RefPointMode PlacedObject2DFactory.RefPointMode},
+	{@link org.bzdev.geom.BasicSplinePath2D BasicSplinePath2D},
+	{@link org.bzdev.swing.AnimatedPanelGraphics AnimatedPanelGraphics},
+	{@link org.bzdev.roadanim.Bicycle Bicycle},
+	{@link org.bzdev.roadanim.BicycleFactory BicycleFactory},
+	{@link org.bzdev.roadanim.Car Car},
+	{@link org.bzdev.roadanim.CarFactory CarFactory},
+	{@link org.bzdev.roadanim.Pedestrian Pedestrian}, and
+	{@link org.bzdev.roadanim.PedestrianFactory PedestrianFactory}.
+      <P>
+	It would also be useful to import
+	{@link org.bzdev.util.units.MKS}:
+	<BLOCKQUOTE><PRE><CODE>
+import (org.bzdev.util.units.MKS);
+	</CODE></PRE></BLOCKQUOTE>
+	{@link org.bzdev.util.units.MKS} provides a series of static
+	methods that ESP turns into functions. For example
+	<BLOCKQUOTE><PRE><CODE>
+feet(20)
+	</CODE></PRE></BLOCKQUOTE>
+	will return the value 6.096, the distance in meters corresponding
+	to 20 feet. If one needs functions such as sin, cos, log, or exp,
+	import the class <CODE>java.lang.Math</CODE>.
+      <P>
+	The next step is to define a variable named <CODE>da</CODE>
+	if it is not present and to call the function createAnimation:
+	<BLOCKQUOTE><PRE><CODE>
+var da ?= null;
+var a2d = createAnimation({
+    frameWidth: 800,
+    frameHeight: 600,
+    ticksPerSecond: 1000.0,
+    ticksPerFrame: 40,
+    imageSpaceDistance: 200.0,
+    gcsDistance: MKS.feet(12)
+});
+	</CODE></PRE></BLOCKQUOTE>
+	The function createAnimation takes an object as its argument. The
+	property names for that object can be
+	<UL>
+          <LI><STRONG>frameWidth</STRONG>. The value of this property is
+            the width of the animation frame in units of points.
+          <LI><STRONG>frameHeight</STRONG>. The value of this property is
+            the height of the animation frame in units of points.
+          <LI><STRONG>ticksPerSecond</STRONG>. The value of this property is
+            the number of simulation ticks per second.
+          <LI><STRONG>ticksPerFrame</STRONG>. The value of this property is
+            the number of simulation ticks until another animation frame
+            is to be created.
+          <LI><STRONG>imageSpaceDistance</STRONG>. The value of this
+            property is a measured distance in units of points.
+          <LI><STRONG>gcsDistance</STRONG>. The value of this property is
+            the GCS distance in meters that
+            <STRONG>imageSpaceDistance</STRONG> represents.
+          <LI><STRONG>xgcs</STRONG>. The value of this property is
+            the X coordinate in GCS coordinates for a reference point
+            (the default value is 0.0).
+          <LI><STRONG>ygcs</STRONG>. The value of this property is
+            the Y coordinate in GCS coordinates for a reference point
+            (the default value is 0.0).
+          <LI><STRONG>xf</STRONG>. The value of this property is
+            the fraction of the distance along the animation frame
+            (left = 0.0, right = 1.0) for the X coordinate of the reference
+            point (the default value is 0.0).
+          <LI><STRONG>yf</STRONG>. The value of this property is
+            the fraction of the distance along the animation frame
+            (bottom = 0.0, top = 1.0) for the Y coordinate of the reference
+            point (the default value is 0.0).
+	</UL>
+	Any property that has a default value does not have to be
+	present in this object.
+      <P>
+	The next stop is to create some factories using the
+	<CODE>Animation2D</CODE> method <CODE>createFactories</CODE>.
+	This method's first argument is the name of a Java package and
+	its second argument an object whose property names are the names
+	of the variables used to store the factories and whose value
+	indicates the factory's class name. For example,
+	<BLOCKQUOTE><PRE><CODE>
+a2d.createFactories("org.bzdev.anim2d", {
+    alf: "AnimationLayer2DFactory",
+    clf: "ConnectingLine2DFactory",
+    pathf: "AnimationPath2DFactory",
+    gvf: "GraphViewFactory"
+});
+
+a2d.createFactories("org.bzdev.roadanim", {
+    bf: "BicycleFactory"});
+
+###
+	</CODE></PRE></BLOCKQUOTE>
+	This creates factories that will be bound to the variables
+	<CODE>alf</CODE>, <CODE>clf</CODE>, <CODE>pathf</CODE>
+	<CODE>gvf</CODE> and <CODE>bf</CODE>. The line containing only
+	<CODE>###</CODE> causes any previous statements that have not
+	yet been processed to be processed. Without this, or without
+	adding a declaration
+	<BLOCKQUOTE><PRE><CODE>
+var alf, clf, pathf, bf, gvf;
+      </CODE></PRE></BLOCKQUOTE>
+      the variables will not be recognized, resulting in an error.
+      The disadvantage of using a variable declaration is that, if a
+      another factory is added, the variable declaration will also have
+      to be modified.
+    <P>
+      Once factories are created, one can create simulation objects.
+      In this example, once will want to create an instance of
+      {@link org.bzdev.anim2d.AnimationPath2D AnimationPath2D},
+      {@link org.bzdev.anim2d.AnimationLayer2D AnimationLayer2D},
+      {@link org.bzdev.roadanim.Bicycle Bicycle}, and
+      {@link org.bzdev.anim2d.ConnectingLine2D ConnectingLine2D}:
+      <BLOCKQUOTE><PRE><CODE>
+var bikePath = pathf.createObject("bikePath", bikepath);
+
+alf.createObject("background", [
+  {visible: true, zorder: 0},
+  {withPrefix: "object", withIndex: [
+       {type: "IMAGE",
+        imageURL: "resource:background.png",
+        refPoint: "LOWER_LEFT",
+        x: 0.0, y: 0.0,
+        imageScaleX: 1.0, imageScaleY: 1.0,
+        imageInGCS: false
+       }
+    ]
+  }
+]);
+
+var t0 = 0.0;
+var vb = mph(12.0);
+var pathLength = bikePath.getPathLength();
+var tbend = t0 + pathLength / vb;
+var tend = tbend + 2.0;
+
+var bike = bf.createObject("bike", [
+     {visible: true},
+     {zorder: 5},
+     {withPrefix: "timeline", withIndex: [
+           {time: t0, path: bikePath, velocity: vb},
+           {time: tbend, velocity: 0.0},
+           {time: tend, visible: false}
+        ]
+     }
+]);
+      </CODE></PRE></BLOCKQUOTE>
+    <P>
+      It will frequently be necessary to compute time intervals,
+      velocities, and accelerations. Since
+      {@link org.bzdev.anim2d.KinematicOps2D} is imported, ESP
+      will recognize a series of functions whose names are
+      constructed using three components.  The first is
+      <STRONG>accel</STRONG>, <STRONG>dist</STRONG>, <STRONG>time</STRONG>,
+      or <STRONG>v</STRONG>.  The second is <STRONG>Given</STRONG>,
+      and the third consists of three letters that are combinations
+      of <STRONG>A</STRONG> (for acceleration), <STRONG>D</STRONG>
+      (for distance), <STRONG>T</STRONG> (for time interval), or
+      <STRONG>V</STRONG> for velocity.
+      For example,
+      <BLOCKQUOTE>
+<CODE>distGivenVVA(mph(10), mph(25), gFract(0.3))</CODE>
+      </BLOCKQUOTE>
+      will compute the distance covered when accelerating at 0.3g from
+      10 mph to 25 mph, and
+      <BLOCKQUOTE>
+<CODE>timeGivenVAA(mph(10), mph(25), gFract(0.3))</CODE> will
+      </BLOCKQUOTE>
+      compute the time it takes to accelerate at 0.3g from
+      10 mph to 25 mph.  See {@link org.bzdev.anim2d.KinematicOps2D}
+      for documentation.
+    <P>
+      In addition, one would like to have a connecting line
+      showing sight lines to the end of the path.
+      <BLOCKQUOTE><PRE><CODE>
+var YELLOW = {red: 255, green: 255, blue: 0};
+
+var cl = clf.createObject("sightline", [
+     {visible: true, zorder: 10, u1: 0.1, u2: 1.0},
+     {withPrefix: "color", config: YELLOW},
+     {withPrefix: "stroke", width: 2.0, dashIncrement: 10,
+      dashPattern: "- "},
+     {withPrefix: "timeline", withIndex: [
+          {time: tbend - 1.0, visible: false}
+        ]
+     }
+]);
+cl.configure(bike::getSeatXGCS, bike::getSeatYGCS,
+             bikePath.getX(5.0), bikePath.getY(5.0));
+      </CODE></PRE></BLOCKQUOTE>
+      Unlike the other factories, there is an additional step
+      after the {@link org.bzdev.anim2d.ConnectingLine2D ConnectingLine2D}
+      is created: the end points have to be configured.  In the example
+      above, method references (e.g., <CODE>bike::getSeatXGCS</CODE>)
+      provide a method with zero arguments to call to get an X or Y
+      coordinate for the start of the line. This is called for each
+      animation frame so that the line is modified as another object
+      moves.
+    <P>
+      Finally, the background image used in this example would take
+      up a large fraction of a screen and is larger than the window
+      dimensions used to configure <CODE>a2d</CODE>. One can, however,
+      add an instance of GraphView to the animation:
+      <BLOCKQUOTE><PRE><CODE>
+gvf.createObject("view", [
+        {xFrameFraction: 1.0, yFrameFraction: 0.0},
+        {initialX: refPoint["x"], initialY: refPoint["y"]},
+        {scaleX: a2d.getXScale(), scaleY: a2d.getYScale()}
+    ]);
+      </CODE></PRE></BLOCKQUOTE>
+      In this case, there should be only instance of this class in an
+      animation. The properties in the specification above are
+      <UL>
+	<LI><STRONG>xFrameFraction</STRONG>. The X position in the animation
+	  window, specified as a fraction were 0 is the left edge and
+	  1.0 is the right edge, for the location of a reference point
+	  relative to the animation frame.
+	<LI><STRONG>yFrameFraction</STRONG>. The Y position in the animation
+	  window, specified as a fraction were 0 is the bottom edge and
+	  1.0 is the top edge, for the location of a reference point
+	  relative to the animation frame.
+	<LI><STRONG>initialX</STRONG>. The initial X coordinate in graph
+	  coordinate space for the frame's reference point.
+	<LI><STRONG>initialY</STRONG>. The initial Y coordinate in
+	  graph coordinate space for the frame's reference point.
+	<LI><STRONG>scaleX</STRONG>. The scaling factor in the X direction.
+	  Multiplying a distance in the X direction, expressed in GCS, by
+	  the this scaling factor gives the corresponding distance in user
+	  space.
+	<LI><STRONG>scaleY</STRONG>. The scaling factor in the Y direction.
+	  Multiplying a distance in the Y direction, expressed in GCS, by
+	  the this scaling factor gives the corresponding distance in user
+	  space.
+      </UL>
+      A <CODE>GraphViewFactory</CODE> can configure additional properties
+      as well, so that a <CODE>GraphView</CODE> can move across a
+      background, and zoom in or out, without modifying other objects
+      in an animation.
+    <P>
+      There are two final statements:
+      <BLOCKQUOTE><PRE><CODE>
+runAnimation(a2d, "Example", da, tend);
+(da != null) &amp;&amp; `{
+    out.println(a2d.getWidthAsInt() + "x" + a2d.getHeightAsInt())}
+}
+      </CODE></PRE></BLOCKQUOTE>
+      This indicates that the animation should be run.  If
+      <CODE>da</CODE> is undefined or null, a built-in viewer will be
+      used. Otherwise a temporary directory will be used to store a
+      sequence of images, and the animation frame's height and width
+      will be printed in a format that ffmpeg can use. The backquote
+      before the opening brace is an ESP shortcut that turns that
+      expression into
+      <BLOCKQUOTE><PRE><CODE>
+function() {
+    out.println(a2d.getWidthAsInt() + "x" + a2d.getHeightAsInt());
+    true
+}()
+      </CODE></PRE></BLOCKQUOTE>
+      which can be used where a Boolean value is expected. The result
+      is that the frame dimensions are printed only when generated
+      images will be stored in a directory.
+    <P>
+      When this animation is run with scrunner as shown above, the
+      following window will appear:
+    <P>
+      <CENTER>
+	<IMG SRC="animation.png" ALT="An animation using a standard viewer">
+      </CENTER>
+    <P>
+      The viewer allows you to run the video, single-step it, and
+      save any of its frames to a file. While debugging an animation,
+      using the viewer will typically be significantly faster than creating
+      a video file.
+
+      <H2>Using Makefiles</H2>
+    <P>
+      The program <CODE>make</CODE> is used for software development
+      to track dependencies: if files are updated, <CODE>make</CODE>
+      allows files to be recreated just when they depend on some
+      other files.  This saves a significant amount of time when
+      a large system is recompiled and only a few file change.
+    <P>
+      For the animation described above, a Makefile is a very simple one:
+      <BLOCKQUOTE><PRE><CODE>
+animation: paths.esp
+        scrunner --resourcePath images paths.esp video.esp
+
+paths.esp: example.epts example.eptt
+       epts -o paths.esp example.eptt
+
+W = 800
+H = 600
+
+animation.mp4: paths.esp video.esp
+        mkdir -p tmp
+        scrunner --resourcePath images -d:da:tmp paths.esp video.esp
+        ffmpeg -y -f image2 -framerate25 -i tmp/img%02d.jpg -s $(W)x$(H) \
+            -r 25 animation.mp4
+      </CODE></PRE></BLOCKQUOTE>
+      These rules will create a new version of paths.esp if it is older
+      then either example.epts or example.eptt. Similarly, it will create a
+      new MPEG-4 file if animation.mp4 is older than paths.esp or video.esp,
+      with the age tested after paths.esp is updated (if necessary).
+    <P>
+      Then running
+      <BLOCKQUOTE><PRE><CODE>
+make
+</CODE></PRE></BLOCKQUOTE>
+      will run the animation and display it in a window. The file paths.esp
+      will be recreated first provided that either example.epts or
+      example.eptt is newer than paths.esp.
+    <P>
+      Running
+      <BLOCKQUOTE><PRE><CODE>
+make animation.mp4
+</CODE></PRE></BLOCKQUOTE>
+      will create an MPEG-4 file that can be distributed as desired. The
+      variables H and W are the height and width of the animation's frame.
+      These are needed by ffmpeg.  When running ffmpeg, $H and $W are
+      replaced with their values.  If a variable has more than one character
+      in its name, the name should be surrounded with parentheses, so that
+      the value of a variable <CODE>WIDTH</CODE> is denoted by
+      <CODE>$(WIDTH)</CODE>.
+    <P>
+      While the Makefile shown above simple for illustrative purposes, there
+      is a problem with it for animation.mp4: The values of W and H, and
+      the digit before "d.jpg" are dependent on the frame size provided in
+      video.esp and on the number of frames that are generated.  A
+      slightly more complicated rule fixes this:
+      <BLOCKQUOTE><PRE><CODE>
+animation.mp4: paths.esp video.esp.esp
+	WxH=`scrunner --resourcePath images -d:da tmp paths.esp video.esp` ; \
+	MAXFRAME=`ls tmp | tail -1 | sed 's/\(img\)\(.\+\)\([.]jpg\)/\2/'` ; \
+	NDIGITS=`echo -n $$MAXFRAME | wc -c` ; \
+	 ffmpeg -f image2 -framerate 25 -i tmp/img%0$${NDIGITS}d.jpg -s $$WxH \
+		-r 25 animation.mp4
+      </CODE></PRE></BLOCKQUOTE>
+      In this case, the command delimited by two backquotes will be run
+      to create the value of <CODE>WxH</CODE>. For <CODE>MAXFRAME</CODE>,
+      the following commands are run, with the output of a command preceding
+      <CODE>|</CODE> passed to the command that follows <CODE>|</CODE>:
+      <UL>
+	<LI><CODE>ls tmp</CODE> &mdash; this command lists the files in
+	  lexical order.
+	<LI><CODE>tail -1</CODE> &mdash; this command filters out all lines
+	  except the last one. The last line  contains a file name that
+	  includes the frame number of the last frame in the animation.
+	<LI><CODE>sed 's/\(img\)\(.\+\)\([.]jpg\)/\2/'</CODE> &mdash; this
+	  command removes <CODE>img</CODE> and <CODE>d.jpg</CODE> from
+	  the line passed to it.
+      </UL>
+      Next, the command <CODE>echo -n $$MAXFRAME | wc -c</CODE> counts
+      the number of digits for the number <CODE>MAXFRAME</CODE>. 
+      Double dollar signs (<CODE>$$</CODE>) are used because <CODE>make</CODE>
+      uses dollar signs, but turns two in a row into a single dollar sign
+      for use in a shell command.
+      The result is that the Makefile does not have to be modified if the
+      frame size is changed in video.esp.
+    </DIV>
+    <SCRIPT type="text/javascript">
+      fixESPLink();
+    </SCRIPT>
+  </BODY>
+</HTML>
+
+<!--  LocalWords:  scrunner epts openjdk BZDEV libbzdev bzdev SHA GCS
+ -->
+<!--  LocalWords:  roadanim unary instanceof subdirectories crosshair
+ -->
+<!--  LocalWords:  zier SEG spline's unselected eptt eps createObject
+ -->
+<!--  LocalWords:  programmatically withKey config withIndex DFactory
+ -->
+<!--  LocalWords:  withPrefix DirectoryAccessor AnimationLayer xgcs
+ -->
+<!--  LocalWords:  AnimationPath ConnectingLine GraphView ZoomMode xf
+ -->
+<!--  LocalWords:  GraphViewFactory KinematicOps PlacedObject ygcs yf
+ -->
+<!--  LocalWords:  PlacedAnimationObject RefPointMode BasicSplinePath
+ -->
+<!--  LocalWords:  AnimatedPanelGraphics BicycleFactory CarFactory
+ -->
+<!--  LocalWords:  PedestrianFactory createAnimation frameWidth accel
+ -->
+<!--  LocalWords:  frameHeight ticksPerSecond ticksPerFrame initialX
+ -->
+<!--  LocalWords:  imageSpaceDistance gcsDistance xFrameFraction jpg
+ -->
+<!--  LocalWords:  yFrameFraction initialY scaleX scaleY ffmpeg
+ -->
+<!--  LocalWords:  backquote Makefiles Makefile backquotes
+ -->
