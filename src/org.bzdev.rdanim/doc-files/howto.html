@@ -21,15 +21,15 @@
     <DIV style="margin-left: 2em">
       <H1>Road Animation Usage Guide</H1>
       <P>
-	The <CODE>org.bzdev.rdanim</CODE> module provides Java classes
+	The <STRONG>org.bzdev.rdanim</STRONG> module provides Java classes
 	representing cars, bicycles, and pedestrians.  For each of these
 	there is a corresponding "factory" class used the create and
 	configure these objects.
       <P>
-	The Java package <CODE>org.bzdev.roadanim</CODE> is provided by the
-	Java module <CODE>org.bzdev.rdanim</CODE> and is dependent on the
-	Java module <CODE>org.bzdev</CODE>, which has its own dependencies.
-	Two programs simplify the use of <CODE>org.bzdev.roadanim</CODE>:
+	The Java package <STRONG>org.bzdev.roadanim</STRONG> is provided by the
+	Java module <STRONG>org.bzdev.rdanim</STRONG> and is dependent on the
+	Java module <STRONG>org.bzdev</STRONG>, which has its own dependencies.
+	Two programs simplify the use of <STRONG>org.bzdev.roadanim</STRONG>:
 	<UL>
 	  <LI><STRONG>scrunner</STRONG>. This is a script interpreter
 	    that supports the ESP (Expression Sequence Parser) scripting
@@ -124,28 +124,28 @@ java -jar INSTALLER
 	    assigned to the variable if the variable does not exist or is
 	    <STRONG>null</STRONG>.
 	  <LI> the <STRONG>`</Strong> operator must be followed by an
-	    opening brace, and will be turned into <CODE>function()</CODE>,
-	    with <CODE>(),</CODE> added immediately following a closing brace.
+a	    opening brace, and will be turned into <STRONG>function()</STRONG>,
+	    with <STRONG>(),</STRONG> added immediately following a closing brace.
 	    In addition, if <STRONG>`</STRONG> is preceded by a binary
 	    logical operator (<STRONG>&amp;&amp;</STRONG> or
 	    <STRONG>||</STRONG>), the function created will always return
 	    <STRONG>true</STRONG> (unless an exception is thrown). Thus,
-	    <CODE>(x == 10) &amp;&amp; `{x = 20}</CODE> is equivalent to the
-	    ECMAScript statement <CODE>if (x == 10) {x = 20;}</CODE>
+	    <STRONG>(x == 10) &amp;&amp; `{x = 20}</STRONG> is equivalent to the
+	    ECMAScript statement <STRONG>if (x == 10) {x = 20;}</STRONG>
 	  <LI> the <STRONG>&lt;=&gt;</Strong> operator swaps two variables.
-	    <CODE>x &lt;=&gt; y</CODE> is equivalent to
+	    <STRONG>x &lt;=&gt; y</STRONG> is equivalent to
 	    <BLOCKQUOTE><PRE><CODE>
 		  var tmp = x;
 		  x = y;
-		  y = x
+		  y = tmp;
 	    </CODE></PRE></BLOCKQUOTE>
 	  <LI> the <STRONG>%%</Strong> operator is equivalent to 'mod'
-	    in mathematics: <CODE>x %% n</CODE> has the value
-	    x mod n.  It differs from the <CODE>%</CODE> operator in that
+	    in mathematics: <STRONG>x %% n</STRONG> has the value
+	    x mod n.  It differs from the <STRONG>%</STRONG> operator in that
 	    the value is always in the range [0, n). For example, the
-	    value of <CODE>1 %% 10</CODE> is 1 and the value of
-	    <CODE>(-1) %% 10</CODE> is 9 so that
-	    <CODE>((1 %% 10) + ((-1) %% 10)) %% 10</CODE> is 0.
+	    value of <STRONG>1 %% 10</STRONG> is 1 and the value of
+	    <STRONG>(-1) %% 10</STRONG> is 9 so that
+	    <STRONG>((1 %% 10) + ((-1) %% 10)) %% 10</STRONG> is 0.
 	  <LI> the <STRONG>::</Strong> operator has two uses. If a
 	    class name is followed by "::null", the value is null but
 	    cast to that class. Otherwise it is used for method references
@@ -182,8 +182,8 @@ java -jar INSTALLER
 	    <STRONG>true</STRONG>, <STRONG>var</Strong>, and
 	    <STRONG>void</STRONG>.
 	</UL>
-	There are no <CODE>if</CODE>, <CODE>for</CODE>, <CODE>return</CODE>,
-	<CODE>switch</CODE>, or <CODE>while</CODE> statements.  Blocks
+	There are no <STRONG>if</STRONG>, <STRONG>for</STRONG>, <STRONG>return</STRONG>,
+	<STRONG>switch</STRONG>, or <STRONG>while</STRONG> statements.  Blocks
 	of code are replaced with lambda expressions (calls to
 	anonymous functions).  Instead of a statement such as
 	<BLOCKQUOTE><PRE><CODE>
@@ -199,7 +199,7 @@ if (x &gt; 0) {
 	<BLOCKQUOTE><PRE><CODE>
 (x &gt; 0) &amp;&amp; `{x = 10};
 	</CODE></PRE></BLOCKQUOTE>
-	A <CODE>return</CODE>statement is not needed because a function
+	A <STRONG>return</STRONG> statement is not needed because a function
 	always returns the value of its last expression unless an
 	exception is thrown.
       <P>
@@ -214,7 +214,7 @@ var list = [1, 2, 3];
 list[1] = 20;
 global.getWriter().format("[%d, %d, %d]\n", list[0], list[1], list[2]);
 	</CODE></PRE></BLOCKQUOTE>
-	will print <CODE>[1, 20, 3]</CODE>.
+	will print <STRONG>[1, 20, 3]</STRONG>.
 	A similar syntax can be used for objects:
 	<BLOCKQUOTE><PRE><CODE>
 var obj = {a: 1, b: 2, c: 3};
@@ -222,11 +222,11 @@ obj["b"] = 20;
 global.getWriter().format("{a: %d, b: %d, c: %d}\n",
 			  obj["a"], obj["b"], obj["c"]);
 	</CODE></PRE></BLOCKQUOTE>
-	will print <CODE>{a: 1, b: 20, c: 3}</CODE>.
+	will print <STRONG>{a: 1, b: 20, c: 3}</STRONG>.
       <P>
 	While ESP does not contain iteration facilities explicitly, it
-	does allow one to use Java streams.  In some cases, this can
-	execute very fast:
+	does allow one to use Java streams.  In some cases, this is very
+	efficient:
 	<BLOCKQUOTE><PRE><CODE>
 import (java.lang.Math);
 import (org.bzdev.lang.MathOps);
@@ -240,7 +240,7 @@ LongStream.rangeClosed(1, 1000000)
 
 global.getWriter().println("sum = " + round(adder.getSum()));
 	</CODE></PRE></BLOCKQUOTE>
-	will perform the sum using Java directly.
+	will perform the sum using Java directly once the stream is set up.
       <P>
 	ESP can be used to write simple programs For example, the following will
 	compute the circumference of an ellipse:
@@ -251,19 +251,19 @@ import org.bzdev.math.Functions;
 a &lt; b &amp;&amp; a &lt;=&gt; b;
 4.0 * a * eE(sqrt(1.0 - (b*b)/(a*a)));
 	</CODE></PRE></BLOCKQUOTE>
-	The function <CODE>eE</CODE>, defined as a static method of
-	the class <CODE>org.bzdev.math.Functions</CODE>, computes the
+	The function <STRONG>eE</STRONG>, defined as a static method of
+	the class <STRONG>org.bzdev.math.Functions</STRONG>, computes the
 	Legendre form of an elliptic integral of the second kind.
-	The <CODE>-s</CODE>option in the first line indicates that,
-	when run as a script, <CODE>a</CODE> is the first command-line
-	argument and its value must be a double, <CODE>b</CODE> is the
+	The <STRONG>-s</STRONG> option in the first line indicates that,
+	when run as a script, <STRONG>a</STRONG> is the first command-line
+	argument and its value must be a double, <STRONG>b</STRONG> is the
 	second command-line argument and its value must be a double,
 	and that
 	<UL>
 	  <LI>the program will exit immediately after the script is
 	    run instead of waiting for threads to exit.
 	  <LI> there are no additional command-line arguments.
-	  <LI> the list line in the script will be printed.
+	  <LI> the last line in the script will be printed.
 	  <LI> the variable 'scripting' is not defined. While fine in
 	    this case, the animation software, particular when factories
 	    are used, needs this variable.
@@ -273,8 +273,8 @@ a &lt; b &amp;&amp; a &lt;=&gt; b;
       <P>
 	First create a directory for the animation, with two
 	subdirectories:
-	<CODE>images</CODE> and <CODE>tmp</CODE>. The directory
-	<CODE>images</CODE> will contain images (typically PANG or JPEG)
+	<STRONG>images</STRONG> and <STRONG>tmp</STRONG>. The directory
+	<STRONG>images</STRONG> will contain images (typically PANG or JPEG)
 	that can be used to create a background for an animation.
 	If the background image is background.pang, then one should run
 	the command
@@ -446,8 +446,8 @@ var bikepath = [{visible: "true",
             object and any nested objects (objects indicated by a
             "config" attribute).  A <STRONG>withIndex</STRONG> attribute
             is not allowed. For example,
-	    <CODE>{withKey: 1, foo: "bar"}</CODE> is turned into
-	    <CODE>set("foo", 1, "bar")</CODE>.
+	    <STRONG>{withKey: 1, foo: "bar"}</STRONG> is turned into
+	    <STRONG>set("foo", 1, "bar")</STRONG>.
 	  <LI> <STRONG>withIndex</STRONG>&mdash;The value of this parameter
             is a JavaScript array. The attribute <STRONG>withKey</STRONG>
 	    is not allowed.
@@ -501,41 +501,41 @@ factory.set("cpoint.y", 5, 319.0);
 	
 	<H2>Running scripts</H2>
       <P>
-	Scripts can be run using the program <CODE>scrunner</CODE>.
+	Scripts can be run using the program <STRONG>scrunner</STRONG>.
 	<BLOCKQUOTE><PRE><CODE>
 scrunner --resourcePath images paths.esp video.esp
 	</CODE></PRE></BLOCKQUOTE>
-	The <CODE>--resourcePath</CODE> option indicates that
-	the URL <CODE>resource:background.png</CODE> points to the
+	The <STRONG>--resourcePath</STRONG> option indicates that
+	the URL <STRONG>resource:background.png</STRONG> points to the
 	file images/background.png. This command will process the
-	scripts <CODE>paths.esp</CODE> and <CODE>video.esp</CODE>
+	scripts <STRONG>paths.esp</STRONG> and <STRONG>video.esp</STRONG>
 	in that order.
 	<BLOCKQUOTE><PRE><CODE>
 	      scrunner --resourcePath images -d:da:tmp  paths.esp video.esp
 	</CODE></PRE></BLOCKQUOTE>
-	The argument <CODE>-d:da:tmp</CODE> results in a
-	scripting-language variable named <CODE>da</CODE> being bound to
+	The argument <STRONG>-d:da:tmp</STRONG> results in a
+	scripting-language variable named <STRONG>da</STRONG> being bound to
 	an instance of the Java class DirectoryAccessor that represents
-	a directory, <CODE>tmp</CODE> in this case, without providing
+	a directory, <STRONG>tmp</STRONG> in this case, without providing
 	unconstrained access to a computer's file system.  As before,
-	the <CODE>--resourcePath</CODE> option indicates that the
-	URL <CODE>resource:background.png</CODE> points to the file
+	the <STRONG>--resourcePath</STRONG> option indicates that the
+	URL <STRONG>resource:background.png</STRONG> points to the file
 	images/background.png. This command will also process the
-	scripts <CODE>paths.esp</CODE> and
-	<CODE>video.esp</CODE> in that order.
+	scripts <STRONG>paths.esp</STRONG> and
+	<STRONG>video.esp</STRONG> in that order.
 	
 	<H2>Animation Scripts</H2>
       <P>
-	The script <CODE>video.esp</CODE> is the one that will be
+	The script <STRONG>video.esp</STRONG> is the one that will be
 	created manually. For convenience, such scripts will
 	start with the line
 	<BLOCKQUOTE><PRE><CODE>
 ### module:org.bzdev.rdanim
 	</CODE></PRE></BLOCKQUOTE>
 	which will look up a "startup" script defined in the Java
-	module <CODE>org.bzdev.rdanim</CODE>. This will define two
-	functions: <CODE>createAnimation</CODE> and
-	<CODE>runAnimation</CODE>.  It will also import a series
+	module <STRONG>org.bzdev.rdanim</STRONG>. This will define two
+	functions: <STRONG>createAnimation</STRONG> and
+	<STRONG>runAnimation</STRONG>.  It will also import a series
 	of Java classes: 
 	{@link org.bzdev.anim2d.Animation2D Animation2D},
 	{@link org.bzdev.anim2d.AnimationLayer2D AnimationLayer2D},
@@ -573,9 +573,9 @@ feet(20)
 	</CODE></PRE></BLOCKQUOTE>
 	will return the value 6.096, the distance in meters corresponding
 	to 20 feet. If one needs functions such as sin, cos, log, or exp,
-	import the class <CODE>java.lang.Math</CODE>.
+	import the class <STRONG>java.lang.Math</STRONG>.
       <P>
-	The next step is to define a variable named <CODE>da</CODE>
+	The next step is to define a variable named <STRONG>da</STRONG>
 	if it is not present and to call the function createAnimation:
 	<BLOCKQUOTE><PRE><CODE>
 var da ?= null;
@@ -624,7 +624,7 @@ var a2d = createAnimation({
 	present in this object.
       <P>
 	The next stop is to create some factories using the
-	<CODE>Animation2D</CODE> method <CODE>createFactories</CODE>.
+	<STRONG>Animation2D</STRONG> method <STRONG>createFactories</STRONG>.
 	This method's first argument is the name of a Java package and
 	its second argument an object whose property names are the names
 	of the variables used to store the factories and whose value
@@ -643,9 +643,9 @@ a2d.createFactories("org.bzdev.roadanim", {
 ###
 	</CODE></PRE></BLOCKQUOTE>
 	This creates factories that will be bound to the variables
-	<CODE>alf</CODE>, <CODE>clf</CODE>, <CODE>pathf</CODE>
-	<CODE>gvf</CODE> and <CODE>bf</CODE>. The line containing only
-	<CODE>###</CODE> causes any previous statements that have not
+	<STRONG>alf</STRONG>, <STRONG>clf</STRONG>, <STRONG>pathf</STRONG>
+	<STRONG>gvf</STRONG> and <STRONG>bf</STRONG>. The line containing only
+	<STRONG>###</STRONG> causes any previous statements that have not
 	yet been processed to be processed. Without this, or without
 	adding a declaration
 	<BLOCKQUOTE><PRE><CODE>
@@ -710,7 +710,7 @@ var bike = bf.createObject("bike", [
       <STRONG>V</STRONG> for velocity.
       For example,
       <BLOCKQUOTE>
-<CODE>distGivenVVA(mph(10), mph(25), gFract(0.3))</CODE>
+<CODE>istGivenVVA(mph(10), mph(25), gFract(0.3))</CODE>
       </BLOCKQUOTE>
       will compute the distance covered when accelerating at 0.3g from
       10 mph to 25 mph, and
@@ -742,7 +742,7 @@ cl.configure(bike::getSeatXGCS, bike::getSeatYGCS,
       Unlike the other factories, there is an additional step
       after the {@link org.bzdev.anim2d.ConnectingLine2D ConnectingLine2D}
       is created: the end points have to be configured.  In the example
-      above, method references (e.g., <CODE>bike::getSeatXGCS</CODE>)
+      above, method references (e.g., <STRONG>bike::getSeatXGCS</STRONG>)
       provide a method with zero arguments to call to get an X or Y
       coordinate for the start of the line. This is called for each
       animation frame so that the line is modified as another object
@@ -750,7 +750,7 @@ cl.configure(bike::getSeatXGCS, bike::getSeatYGCS,
     <P>
       Finally, the background image used in this example would take
       up a large fraction of a screen and is larger than the window
-      dimensions used to configure <CODE>a2d</CODE>. One can, however,
+      dimensions used to configure <STRONG>a2d</STRONG>. One can, however,
       add an instance of GraphView to the animation:
       <BLOCKQUOTE><PRE><CODE>
 gvf.createObject("view", [
@@ -783,8 +783,8 @@ gvf.createObject("view", [
 	  the this scaling factor gives the corresponding distance in user
 	  space.
       </UL>
-      A <CODE>GraphViewFactory</CODE> can configure additional properties
-      as well, so that a <CODE>GraphView</CODE> can move across a
+      A <STRONG>GraphViewFactory</STRONG> can configure additional properties
+      as well, so that a <STRONG>GraphView</STRONG> can move across a
       background, and zoom in or out, without modifying other objects
       in an animation.
     <P>
@@ -796,7 +796,7 @@ runAnimation(a2d, "Example", da, tend);
 }
       </CODE></PRE></BLOCKQUOTE>
       This indicates that the animation should be run.  If
-      <CODE>da</CODE> is undefined or null, a built-in viewer will be
+      <STRONG>da</STRONG> is undefined or null, a built-in viewer will be
       used. Otherwise a temporary directory will be used to store a
       sequence of images, and the animation frame's height and width
       will be printed in a format that ffmpeg can use. The backquote
@@ -826,8 +826,8 @@ function() {
 
       <H2>Using Makefiles</H2>
     <P>
-      The program <CODE>make</CODE> is used for software development
-      to track dependencies: if files are updated, <CODE>make</CODE>
+      The program <STRONG>make</STRONG> is used for software development
+      to track dependencies: if files are updated, <STRONG>make</STRONG>
       allows files to be recreated just when they depend on some
       other files.  This saves a significant amount of time when
       a large system is recompiled and only a few file change.
@@ -871,8 +871,8 @@ make animation.mp4
       These are needed by ffmpeg.  When running ffmpeg, $H and $W are
       replaced with their values.  If a variable has more than one character
       in its name, the name should be surrounded with parentheses, so that
-      the value of a variable <CODE>WIDTH</CODE> is denoted by
-      <CODE>$(WIDTH)</CODE>.
+      the value of a variable <STRONG>WIDTH</STRONG> is denoted by
+      <STRONG>$(WIDTH)</STRONG>.
     <P>
       While the Makefile shown above simple for illustrative purposes, there
       is a problem with it for animation.mp4: The values of W and H, and
@@ -888,22 +888,22 @@ animation.mp4: paths.esp video.esp.esp
 		-r 25 animation.mp4
       </CODE></PRE></BLOCKQUOTE>
       In this case, the command delimited by two backquotes will be run
-      to create the value of <CODE>WxH</CODE>. For <CODE>MAXFRAME</CODE>,
+      to create the value of <STRONG>WxH</STRONG>. For <STRONG>MAXFRAME</STRONG>,
       the following commands are run, with the output of a command preceding
-      <CODE>|</CODE> passed to the command that follows <CODE>|</CODE>:
+      <STRONG>|</STRONG> passed to the command that follows <STRONG>|</STRONG>:
       <UL>
-	<LI><CODE>ls tmp</CODE> &mdash; this command lists the files in
+	<LI><STRONG>ls tmp</STRONG> &mdash; this command lists the files in
 	  lexical order.
-	<LI><CODE>tail -1</CODE> &mdash; this command filters out all lines
+	<LI><STRONG>tail -1</STRONG> &mdash; this command filters out all lines
 	  except the last one. The last line  contains a file name that
 	  includes the frame number of the last frame in the animation.
-	<LI><CODE>sed 's/\(img\)\(.\+\)\([.]jpg\)/\2/'</CODE> &mdash; this
-	  command removes <CODE>img</CODE> and <CODE>d.jpg</CODE> from
+	<LI><STRONG>sed 's/\(img\)\(.\+\)\([.]jpg\)/\2/'</STRONG> &mdash; this
+	  command removes <STRONG>img</STRONG> and <STRONG>d.jpg</STRONG> from
 	  the line passed to it.
       </UL>
-      Next, the command <CODE>echo -n $$MAXFRAME | wc -c</CODE> counts
-      the number of digits for the number <CODE>MAXFRAME</CODE>. 
-      Double dollar signs (<CODE>$$</CODE>) are used because <CODE>make</CODE>
+      Next, the command <STRONG>echo -n $$MAXFRAME | wc -c</STRONG> counts
+      the number of digits for the number <STRONG>MAXFRAME</STRONG>. 
+      Double dollar signs (<STRONG>$$</STRONG>) are used because <STRONG>make</STRONG>
       uses dollar signs, but turns two in a row into a single dollar sign
       for use in a shell command.
       The result is that the Makefile does not have to be modified if the
